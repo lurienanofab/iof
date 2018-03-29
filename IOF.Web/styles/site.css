@@ -1,0 +1,235 @@
+﻿body {
+    margin-bottom: 50px;
+}
+
+    body > form > .container-fluid {
+        margin-top: 20px;
+    }
+
+h5 {
+    font-size: 15px;
+    color: #003366;
+    font-weight: bold;
+}
+
+.form-horizontal .form-inline .form-group {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+span.text-muted {
+    display: inline;
+}
+
+em.text-muted {
+    display: block;
+}
+
+.div-spacing div {
+    margin-bottom: 10px;
+}
+
+    .div-spacing div:last-child {
+        margin-bottom: 0;
+    }
+
+.btn-spacing .btn {
+    margin-right: 3px;
+}
+
+    .btn-spacing .btn:last-child {
+        margin-right: 0;
+    }
+
+.separator span:after {
+    content: ' | ';
+}
+
+.separator span:last-child:after {
+    content: none;
+}
+
+.compact .form-group {
+    margin-bottom: 5px;
+}
+
+.value {
+    display: inline-block;
+}
+
+.bootstrap-alert {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.iofnav.panel-group .panel + .panel {
+    margin-top: 2px;
+}
+
+.iofnav .panel-heading {
+    background-color: #2e4d7b;
+    color: #fff;
+    padding: 0;
+}
+
+    .iofnav .panel-heading .panel-title {
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+        .iofnav .panel-heading .panel-title a {
+            display: block;
+            padding: 10px 15px;
+        }
+
+            .iofnav .panel-heading .panel-title a:hover,
+            .iofnav .panel-heading .panel-title a:active,
+            .iofnav .panel-heading .panel-title a:focus {
+                text-decoration: none;
+            }
+
+.iofnav .panel-body {
+    background-color: #d3deef;
+    min-height: 160px;
+    padding: 2px;
+}
+
+    .iofnav .panel-body .nav-link {
+        display: block;
+        margin-left: 15px;
+        margin-top: 5px;
+    }
+
+        .iofnav .panel-body .nav-link.selected {
+            font-weight: bold;
+        }
+
+.title {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.iofgrid {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .iofgrid.datatable {
+        table-layout: fixed;
+    }
+
+    .iofgrid > thead > tr > th {
+        border: solid 1px #444;
+        background-color: #5078b3;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .iofgrid.table {
+        margin-bottom: 0;
+    }
+
+        .iofgrid.table > thead:first-child > tr:first-child > th {
+            border-top: solid 1px #444;
+        }
+
+    .iofgrid.datatable > thead > tr > th {
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .iofgrid.datatable > thead > tr > .sorting_asc,
+    .iofgrid.datatable > thead > tr > .sorting_desc {
+        background-color: #3058b3;
+    }
+
+    .iofgrid > tbody > tr > td {
+        border: solid 1px #808080;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+
+    .iofgrid.datatable > tbody > tr > td {
+        vertical-align: top;
+    }
+
+    /* table striping rules for non-datatables */
+    .iofgrid.table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .iofgrid.table-striped > tbody > tr:nth-of-type(even) {
+        background-color: #e0e8ee;
+    }
+
+    /* let datatables handle the stripes with odd/even classes */
+    .iofgrid.datatable.table-striped > tbody > tr:nth-of-type(odd),
+    .iofgrid.datatable.table-striped > tbody > tr:nth-of-type(even) {
+        background-color: unset;
+    }
+
+    .iofgrid.datatable.table-striped > tbody > tr.odd {
+        background-color: #f9f9f9;
+    }
+
+    .iofgrid.datatable.table-striped > tbody > tr.even {
+        background-color: #e0e8ee;
+    }
+
+    /* child-odd/child-even classes must be added by the datatables rowCallback method */
+    .iofgrid.datatable.table-striped > tbody > tr.child-odd {
+        background-color: #f9f9f9;
+    }
+
+    .iofgrid.datatable.table-striped > tbody > tr.child-even {
+        background-color: #e0e8ee;
+    }
+
+    .iofgrid.table-hover > tbody > tr:hover {
+        background-color: #e0ffff;
+    }
+
+    .iofgrid > tfoot > tr > td {
+        border: solid 1px #808080;
+        background-color: #ccff99;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+
+    .iofgrid.datatable > tfoot > tr > td {
+        vertical-align: top;
+    }
+
+/*
+    These two rules exist solely to make csslint not complain that
+    the tr.odd/tr.even rules above are overqualified (the tr is indeed
+    necessary because of the tr:nth-of-type rules).
+*/
+p.odd,
+p.child-odd {
+    background-color: #f9f9f9;
+}
+
+p.even,
+p.child-even {
+    background-color: #e0e8ee;
+}
+
+.vendor-toggle {
+    display: inline-block;
+    width: 25px;
+}
+
+.footer {
+    background-color: #c0c0c0;
+    color: #333333;
+    font-size: 10px;
+    height: 50px;
+    padding-top: 10px;
+}
+
+    .footer .container p {
+        text-align: center;
+    }

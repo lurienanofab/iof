@@ -1,0 +1,109 @@
+﻿<%@ Master Language="VB" AutoEventWireup="false" CodeBehind="IOFMaster.Master.vb" Inherits="IOF.Web.IOFMaster" %>
+
+<%@ Register Src="~/Controls/Accordion.ascx" TagName="Accordion" TagPrefix="uc" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>LNF - IOF</title>
+
+    <%--<link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/styles/master.css?v=20171010" />
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/jquery-ui/themes/smoothness/jquery-ui.min.css?v=20171010" />
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/styles/datatables.css?v=20171010" />
+    <link rel="stylesheet" href="scripts/jquery.ordering/jquery.ordering.css?v=20171010" />
+    <link rel="stylesheet" href="styles/purchasing_search.css?v=20171010" />
+    <link rel="stylesheet" href="styles/navigation.css?v=20171010" />
+    <link rel="stylesheet" href="styles/default.css?v=20171010" />--%>
+
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/datatables/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/styles/bootstrap/sticky-footer.css" />
+    <link rel="stylesheet" href="<%=ResolveUrl("~/styles/site.css")%>" />
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 col-md-3">
+                    <!-- Navigation -->
+                    <uc:Accordion runat="server" ID="Accordion1" />
+                </div>
+                <div class="col-lg-10 col-md-9">
+                    <!-- Content -->
+                    <div style="margin-bottom: 20px;">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>
+                    &copy;2018 LNF, 1301 Beal Avenue, Ann Arbor, Michigan 48109<br />
+                    <a href="http://www.umich.edu" target="_blank">University of Michigan</a> | <a href="http://www.engin.umich.edu" target="_blank">College of Engineering</a>
+                </p>
+            </div>
+        </footer>
+    </form>
+
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/jquery/jquery.min.js"></script>
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/datatables/js/dataTables.bootstrap.min.js"></script>
+
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/moment/moment.min.js"></script>
+    <script src="https://ssel-apps.eecs.umich.edu/static/lib/numeral/numeral.min.js"></script>
+
+    <script src="<%=ResolveUrl("~/scripts/iofsearch.js?v=20180327")%>"></script>
+    <script src="<%=ResolveUrl("~/scripts/purchsearch.js?v=20180327")%>"></script>
+
+    <%--<script src="https://ssel-apps.eecs.umich.edu/static/lib/jquery-ui/jquery-ui.min.js"></script>--%>
+    <%--<script src="https://ssel-apps.eecs.umich.edu/static/lib/datatables/plugins/api/row().show().js"></script>--%>
+    <%--<script src="//ssel-apps.eecs.umich.edu/static/scripts/jquery/jquery.daterange.js"></script>--%>
+    <%--<script src="scripts/jquery.iofmenu.js?v=20160630"></script>--%>
+
+    <%--<script src="scripts/jquery.iofpurchsearch.js?v=20160630"></script>
+    <script src="scripts/jquery.iofitems.js?v=20160630"></script>
+    <script src="scripts/jquery.ordering/jquery.ordering.js?v=20160630"></script>--%>
+
+    <script>
+        //$('.iof-menu').iofmenu();
+        //$('.iof-purchsearch').iofpurchsearch();
+        //$('.iof-items').iofitems();
+
+        $(".store-manager").on("change", function (e) {
+            __doPostBack("chkStoreManager", $(this).prop("checked"))
+        });
+
+        $(".back-button").on("click", function (e) {
+            history.back();
+        });
+
+        var iofSearch = $(".iofsearch").iofsearch();
+        var purchSearch = $(".purchsearch").purchsearch();
+    </script>
+
+    <script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-4869731-5']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+        })();
+    </script>
+
+    <asp:ContentPlaceHolder runat="server" ID="scripts">
+    </asp:ContentPlaceHolder>
+</body>
+</html>

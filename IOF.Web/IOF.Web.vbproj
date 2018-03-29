@@ -1,0 +1,547 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>
+    </SchemaVersion>
+    <ProjectGuid>{9D386516-D653-4F2D-A5D7-F7B7BD848C6F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>IOF.Web</RootNamespace>
+    <AssemblyName>IOF.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>IOF.Web.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>IOF.Web.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap, Version=4.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.6.1\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Accounts.aspx" />
+    <Content Include="ApprovalList.aspx" />
+    <Content Include="ApprovalProcess.aspx" />
+    <Content Include="Approvers.aspx" />
+    <Content Include="Categories.aspx" />
+    <Content Include="Controls\Accordion.ascx" />
+    <Content Include="Controls\BootstrapAlert.ascx" />
+    <Content Include="Controls\PurchaseOrderAttachments.ascx" />
+    <Content Include="Controls\PurchaseOrderDetailView.ascx" />
+    <Content Include="Controls\PurchaseOrderHeaderView.ascx" />
+    <Content Include="Controls\PurchaseOrderSearch.ascx" />
+    <Content Include="Controls\PurchasingSearch.ascx" />
+    <Content Include="Controls\VendorInfo.ascx" />
+    <Content Include="CopyData.aspx" />
+    <Content Include="docs\temp\index.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="images\Brock.tif" />
+    <Content Include="images\contentback.jpg" />
+    <Content Include="images\Grimard.tif" />
+    <Content Include="images\Herrera-Fierro.tif" />
+    <Content Include="images\icon_delete.gif" />
+    <Content Include="images\Martin.tif" />
+    <Content Include="images\Schweiger.tif" />
+    <Content Include="images\Sebastian.tif" />
+    <Content Include="images\VanDerElzen.tif" />
+    <Content Include="images\windows-arrow.gif" />
+    <Content Include="index.aspx" />
+    <Compile Include="ajax\category.ashx.vb">
+      <DependentUpon>category.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\datatables.ashx.vb">
+      <DependentUpon>datatables.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\purchaser.ashx.vb">
+      <DependentUpon>purchaser.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Attachments.ashx.vb">
+      <DependentUpon>Attachments.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="AttachmentsHandler.vb" />
+    <Compile Include="Controls\Accordion.ascx.designer.vb">
+      <DependentUpon>Accordion.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Accordion.ascx.vb">
+      <DependentUpon>Accordion.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BootstrapAlert.ascx.designer.vb">
+      <DependentUpon>BootstrapAlert.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BootstrapAlert.ascx.vb">
+      <DependentUpon>BootstrapAlert.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderAttachments.ascx.designer.vb">
+      <DependentUpon>PurchaseOrderAttachments.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderAttachments.ascx.vb">
+      <DependentUpon>PurchaseOrderAttachments.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IOC.vb" />
+    <Content Include="Items.aspx" />
+    <Content Include="OrderedIOF.aspx" />
+    <Content Include="POConfirm.aspx" />
+    <Content Include="POInfo.aspx" />
+    <Content Include="POItems.aspx" />
+    <Content Include="POReceive.aspx" />
+    <Content Include="PurchaseIOF.aspx" />
+    <Content Include="PurchaseList.aspx" />
+    <Content Include="Purchasers.aspx" />
+    <Content Include="reports\index.aspx" />
+    <Content Include="scripts\bootstrap-treeview\bootstrap-treeview.min.css" />
+    <Content Include="scripts\bootstrap-treeview\bootstrap-treeview.min.js" />
+    <Content Include="scripts\detail.js" />
+    <Content Include="scripts\iofsearch.js" />
+    <Content Include="scripts\purchsearch.js" />
+    <Content Include="scripts\report.js" />
+    <Content Include="SearchIOF.aspx" />
+    <Content Include="styles\site.css" />
+    <Content Include="TrackIOF.aspx" />
+    <Content Include="UnfinishedIOF.aspx" />
+    <Content Include="Vendors.aspx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Accounts.aspx.designer.vb">
+      <DependentUpon>Accounts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Accounts.aspx.vb">
+      <DependentUpon>Accounts.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ApprovalList.aspx.designer.vb">
+      <DependentUpon>ApprovalList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApprovalList.aspx.vb">
+      <DependentUpon>ApprovalList.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ApprovalProcess.aspx.designer.vb">
+      <DependentUpon>ApprovalProcess.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApprovalProcess.aspx.vb">
+      <DependentUpon>ApprovalProcess.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Approvers.aspx.designer.vb">
+      <DependentUpon>Approvers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Approvers.aspx.vb">
+      <DependentUpon>Approvers.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Categories.aspx.designer.vb">
+      <DependentUpon>Categories.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Categories.aspx.vb">
+      <DependentUpon>Categories.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderDetailView.ascx.designer.vb">
+      <DependentUpon>PurchaseOrderDetailView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderDetailView.ascx.vb">
+      <DependentUpon>PurchaseOrderDetailView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderHeaderView.ascx.designer.vb">
+      <DependentUpon>PurchaseOrderHeaderView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderHeaderView.ascx.vb">
+      <DependentUpon>PurchaseOrderHeaderView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderSearch.ascx.designer.vb">
+      <DependentUpon>PurchaseOrderSearch.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PurchaseOrderSearch.ascx.vb">
+      <DependentUpon>PurchaseOrderSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\PurchasingSearch.ascx.designer.vb">
+      <DependentUpon>PurchasingSearch.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PurchasingSearch.ascx.vb">
+      <DependentUpon>PurchasingSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\VendorInfo.ascx.designer.vb">
+      <DependentUpon>VendorInfo.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\VendorInfo.ascx.vb">
+      <DependentUpon>VendorInfo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CopyData.aspx.designer.vb">
+      <DependentUpon>CopyData.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CopyData.aspx.vb">
+      <DependentUpon>CopyData.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="docs\temp\index.aspx.designer.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="docs\temp\index.aspx.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.vb">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="index.aspx.designer.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="index.aspx.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="IOFHandler.vb" />
+    <Compile Include="IOFMaster.Master.designer.vb">
+      <DependentUpon>IOFMaster.Master</DependentUpon>
+    </Compile>
+    <Compile Include="IOFMaster.Master.vb">
+      <DependentUpon>IOFMaster.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IOFPage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IOFControl.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="IOFUtility.vb" />
+    <Compile Include="Items.aspx.designer.vb">
+      <DependentUpon>Items.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Items.aspx.vb">
+      <DependentUpon>Items.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\MyExtensions\MyWebExtension.vb">
+      <VBMyExtensionTemplateID>Microsoft.VisualBasic.Web.MyExtension</VBMyExtensionTemplateID>
+      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="OrderedIOF.aspx.designer.vb">
+      <DependentUpon>OrderedIOF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="OrderedIOF.aspx.vb">
+      <DependentUpon>OrderedIOF.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="POConfirm.aspx.designer.vb">
+      <DependentUpon>POConfirm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POConfirm.aspx.vb">
+      <DependentUpon>POConfirm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POInfo.aspx.designer.vb">
+      <DependentUpon>POInfo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POInfo.aspx.vb">
+      <DependentUpon>POInfo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POItems.aspx.designer.vb">
+      <DependentUpon>POItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POItems.aspx.vb">
+      <DependentUpon>POItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POReceive.aspx.designer.vb">
+      <DependentUpon>POReceive.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POReceive.aspx.vb">
+      <DependentUpon>POReceive.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="PrintIOF.ashx.vb">
+      <DependentUpon>PrintIOF.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseIOF.aspx.designer.vb">
+      <DependentUpon>PurchaseIOF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseIOF.aspx.vb">
+      <DependentUpon>PurchaseIOF.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="PurchaseList.aspx.designer.vb">
+      <DependentUpon>PurchaseList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseList.aspx.vb">
+      <DependentUpon>PurchaseList.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Purchasers.aspx.designer.vb">
+      <DependentUpon>Purchasers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Purchasers.aspx.vb">
+      <DependentUpon>Purchasers.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Repository.vb" />
+    <Compile Include="reports\ajax.ashx.vb">
+      <DependentUpon>ajax.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\index.aspx.designer.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\index.aspx.vb">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Route.vb" />
+    <Compile Include="SearchCriteria.vb" />
+    <Compile Include="SearchIOF.aspx.designer.vb">
+      <DependentUpon>SearchIOF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SearchIOF.aspx.vb">
+      <DependentUpon>SearchIOF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TrackIOF.aspx.designer.vb">
+      <DependentUpon>TrackIOF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TrackIOF.aspx.vb">
+      <DependentUpon>TrackIOF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UnfinishedIOF.aspx.designer.vb">
+      <DependentUpon>UnfinishedIOF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UnfinishedIOF.aspx.vb">
+      <DependentUpon>UnfinishedIOF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Vendors.aspx.designer.vb">
+      <DependentUpon>Vendors.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Vendors.aspx.vb">
+      <DependentUpon>Vendors.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IOFMaster.Master" />
+    <Content Include="docs\IOFTemplate.pdf" />
+    <Content Include="docs\IOFTemplatePage2.pdf" />
+    <Content Include="ajax\datatables.ashx" />
+    <Content Include="ajax\purchaser.ashx" />
+    <Content Include="Attachments.ashx" />
+    <Content Include="ajax\category.ashx" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\PublishProfiles\Production %28Apps%29.pubxml" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Content Include="PrintIOF.ashx" />
+    <Content Include="reports\ajax.ashx" />
+    <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\lnf\LNF.Impl\LNF.Impl.csproj">
+      <Project>{7a6cd165-0c48-4680-9a49-281688eb1cd8}</Project>
+      <Name>LNF.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lnf\LNF.Models\LNF.Models.csproj">
+      <Project>{98c7f73d-ef9d-4a87-8b79-a1208085cfbd}</Project>
+      <Name>LNF.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lnf\LNF.Web\LNF.Web.csproj">
+      <Project>{f79683ff-e524-4107-a6e1-29579ee544e1}</Project>
+      <Name>LNF.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lnf\LNF\LNF.csproj">
+      <Project>{e3b73410-869b-4ba2-99ac-ad6708a27ade}</Project>
+      <Name>LNF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IOF.Impl\IOF.Impl.csproj">
+      <Project>{4f84bb69-1f02-4008-8f15-2f1dae4d5236}</Project>
+      <Name>IOF.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IOF\IOF.csproj">
+      <Project>{4dfe55d5-e5c8-4fcb-9bd4-edd11ff0cb5c}</Project>
+      <Name>IOF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!--<ItemGroup>
+    <PackageReference Include="Legacy2CPSWorkaround" Version="1.0.0">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>-->
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60440</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/iof</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
