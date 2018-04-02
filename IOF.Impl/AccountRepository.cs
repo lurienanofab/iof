@@ -39,7 +39,9 @@ namespace IOF.Impl
         public IEnumerable<Account> GetActiveAccounts(int clientId)
         {
             var query = DA.Current.Query<Ordering.PurchaseOrderAccount>().Where(x => x.ClientID == clientId && x.Active);
-            var result = CreateAccounts(query);
+
+            var result = CreateAccounts(query).Where(x => x.Active); //need to check Active again to exclude inactive accounts (not just inactive in IOF)
+
             return result;
         }
 
@@ -125,7 +127,7 @@ namespace IOF.Impl
                 AccountID = x.PurchaseOrderAccount.AccountID,
                 AccountName = x.Account.Name,
                 ShortCode = x.Account.ShortCode,
-                Active = x.PurchaseOrderAccount.Active
+                Active = x.PurchaseOrderAccount.Active && x.Account.Active
             }).ToList();
 
             return result;

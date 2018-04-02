@@ -144,6 +144,7 @@
                     // show the text input
                     $(".vendor-list-container", $this).hide();
                     $(".vendor-text-container", $this).show();
+                    $(".vendor-name-list option[value='-1']", $this).prop("selected", true);
                     $(".vendor-name-text", $this).focus();
                 } else {
                     $(this).data("vendorSearchType", "text").html("text");

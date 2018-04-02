@@ -116,7 +116,7 @@
                 <th style="width: 120px">Created By</th>
                 <th style="width: 120px">Approved By</th>
                 <th style="width: 120px">Part #</th>
-                <th>Description</th>
+                <th style="width: 240px;">Description</th>
                 <th style="width: 100px">Category</th>
                 <th style="width: 150px">Vendor</th>
                 <th style="width: 80px">Created On</th>

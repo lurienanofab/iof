@@ -186,9 +186,4 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.date_picker').datepicker();
-        });
-    </script>
 </asp:Content>

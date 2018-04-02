@@ -10,7 +10,6 @@ Namespace Controls
         Public Property StatusIdList As String = String.Empty
         Public Property DisplayOption As OrderDisplayOption = OrderDisplayOption.Detail
         Public Property Action As String = String.Empty
-        'Public Property SelectedClientID As Integer = -1
 
         Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
             ' this will ensure the __doPostback javascript function is created, which is needed for chkStoreManager event handling
@@ -75,9 +74,5 @@ Namespace Controls
             ddlVendors.DataBind()
             ddlVendors.Items.Insert(0, New ListItem("-- Select vendor from the list to filter results --", "-1"))
         End Sub
-
-        'Protected Sub ddlClients_DataBound(sender As Object, e As EventArgs)
-        '    ddlClients.SelectedValue = SelectedClientID.ToString()
-        'End Sub
     End Class
 End Namespace

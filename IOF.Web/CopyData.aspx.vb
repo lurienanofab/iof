@@ -59,7 +59,7 @@ Public Class CopyData
 
         If IsAdministrator() OrElse IsApprover() Then
             clients = ClientRepository.GetActiveClients()
-            ddlCopyToClient.DataSource = clients
+            ddlCopyToClient.DataSource = CreateClientListItems(clients)
             ddlCopyToClient.DataBind()
             If IsStoreManager() Then
                 ddlCopyToClient.Items.Insert(0, New ListItem("Store Manager", "0"))
@@ -78,7 +78,7 @@ Public Class CopyData
             phCopyToClientName.Visible = True
         End If
 
-        ddlCopyFromClient.DataSource = ClientRepository.GetClientsWithVendor().OrderBy(Function(x) x.DisplayName)
+        ddlCopyFromClient.DataSource = CreateClientListItems(ClientRepository.GetClientsWithVendor())
         ddlCopyFromClient.DataBind()
 
         If IsStoreManager() Then
@@ -96,7 +96,7 @@ Public Class CopyData
             Return
         End If
 
-        ddlCopyFromVendor.DataSource = VendorRepository.GetActiveVendors(clientId).OrderBy(Function(x) x.VendorName)
+        ddlCopyFromVendor.DataSource = CreateVendorListItems(VendorRepository.GetActiveVendors(clientId))
         ddlCopyFromVendor.DataBind()
     End Sub
 
@@ -161,6 +161,14 @@ Public Class CopyData
         End If
 
         Return result
+    End Function
+
+    Private Function CreateClientListItems(clients As IEnumerable(Of Client)) As ListItem()
+        Return clients.OrderBy(Function(x) x.DisplayName).Select(Function(x) New ListItem(x.DisplayName, x.ClientID.ToString())).ToArray()
+    End Function
+
+    Private Function CreateVendorListItems(vendors As IEnumerable(Of Vendor)) As ListItem()
+        Return vendors.OrderBy(Function(x) x.VendorName).Select(Function(x) New ListItem(x.VendorName, x.VendorID.ToString())).ToArray()
     End Function
 End Class
 

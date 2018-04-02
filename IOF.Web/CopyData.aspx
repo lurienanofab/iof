@@ -23,7 +23,7 @@
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Client</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyToClient" DataTextField="DisplayName" DataValueField="ClientID" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyToClient" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
                         <asp:PlaceHolder runat="server" ID="phCopyToClientName" Visible="false">
                             <p class="form-control-static">
                                 <asp:Literal runat="server" ID="litCopyToClientName"></asp:Literal>
@@ -45,14 +45,14 @@
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Client</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyFromClient" DataTextField="DisplayName" DataValueField="ClientID" AutoPostBack="true" OnSelectedIndexChanged="ddlCopyFromClient_SelectedIndexChanged" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyFromClient" DataTextField="Text" DataValueField="Value" AutoPostBack="true" OnSelectedIndexChanged="ddlCopyFromClient_SelectedIndexChanged" CssClass="form-control" />
                     </div>
                 </div>
 
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Vendor</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyFromVendor" DataTextField="VendorName" DataValueField="VendorID" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyFromVendor" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
                     </div>
                 </div>
 
