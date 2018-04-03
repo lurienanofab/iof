@@ -136,6 +136,7 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="scripts" runat="server">
+    <script src="scripts/detail.js"></script>
     <script>
         $(".purchasing-list").DataTable({
             "pageLength": 10,
@@ -155,9 +156,7 @@
                 "emptyTable": "No IOFs were found."
             }
         });
+
+        $(".detail").detail();
     </script>
-    <%--<script src="scripts/jquery.podview.js"></script>
-    <script>
-        $(".purchase-order-detail-view").podview();
-    </script>--%>
 </asp:Content>
