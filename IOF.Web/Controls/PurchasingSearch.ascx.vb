@@ -217,11 +217,11 @@ Namespace Controls
 
         Protected Sub Page_Init(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Init
             If Not Page.IsPostBack Then
-                ddlPurchaser.DataSource = ClientRepository.GetPurchasers()
+                ddlPurchaser.DataSource = ClientRepository.GetPurchasers().OrderBy(Function(x) x.DisplayName)
                 ddlPurchaser.DataBind()
                 ddlPurchaser.Items.Insert(0, New ListItem("-- All --", "0"))
 
-                ddlCreator.DataSource = ClientRepository.GetActiveClients()
+                ddlCreator.DataSource = ClientRepository.GetActiveClients().OrderBy(Function(x) x.DisplayName)
                 ddlCreator.DataBind()
                 ddlCreator.Items.Insert(0, New ListItem("-- All --", "0"))
             End If

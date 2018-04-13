@@ -61,7 +61,7 @@ Namespace Reports
         End Sub
 
         Private Sub UpdateItems()
-            Dim items As IEnumerable(Of Item) = ItemRepository.GetClientItems(Integer.Parse(ddlClients.SelectedValue))
+            Dim items As IEnumerable(Of Item) = ItemRepository.GetClientItems(Integer.Parse(ddlClients.SelectedValue)).OrderBy(Function(x) x.Description)
             rptItems.DataSource = items
             rptItems.DataBind()
         End Sub

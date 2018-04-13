@@ -20,7 +20,7 @@
             <div class="panel-body">
                 <strong class="title">Add Item</strong>
 
-                <asp:Label ID="lblItemID" runat="server" Visible="false" />
+                <asp:HiddenField runat="server" ID="hidItemID" />
 
                 <div class="form-horizontal compact">
                     <asp:PlaceHolder runat="server" ID="phStoreManager" Visible="false">

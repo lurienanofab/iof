@@ -14,13 +14,13 @@ Option Explicit On
 Partial Public Class Items
     
     '''<summary>
-    '''lblItemID control.
+    '''hidItemID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblItemID As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents hidItemID As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
     '''phStoreManager control.

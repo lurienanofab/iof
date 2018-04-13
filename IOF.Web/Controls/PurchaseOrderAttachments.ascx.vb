@@ -36,7 +36,7 @@ Public Class PurchaseOrderAttachments
 
         phUpload.Visible = Not [ReadOnly]
 
-        Dim attachments As IEnumerable(Of Attachment) = AttachmentService.GetAttachments(POID)
+        Dim attachments As IEnumerable(Of Attachment) = AttachmentService.GetAttachments(POID).OrderBy(Function(x) x.FileName)
 
         If attachments.Count() > 0 Then
             rptAttachments.Visible = True

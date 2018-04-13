@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  For more information on how to configure your ASP.NET application, please visit
+  http://go.microsoft.com/fwlink/?LinkId=169433
+  -->
+<configuration>
+    <configSections>
+        <sectionGroup name="lnf">
+            <section name="provider" type="LNF.ServiceProviderSection, LNF" />
+        </sectionGroup>
+    </configSections>
+
+    <lnf>
+        <provider production="false">
+            <context loginUrl="/login" />
+            <dataAccess showSql="true" universalPassword="xxxxx" />
+            <email host="xxxxx" />
+            <control host="xxxxx" />
+            <log name="IOF" enabled="true" />
+        </provider>
+    </lnf>
+
+    <connectionStrings>
+        <add name="cnSselData" connectionString="xxxxx" />
+        <add name="cnIOF" connectionString="xxxxx" />
+    </connectionStrings>
+
+    <appSettings>
+        <add key="IsProduction" value="false"/>
+        <add key="ExcelTemplatePath" value="xxxxx"/>
+        <add key="PdfBasePath" value="xxxxx"/>
+        <add key="SystemEmail" value="xxxxx"/>
+        <add key="PurchasingAgentEmails" value="xxxxx"/>
+        <add key="ApproverEmails" value="xxxxx"/>
+        <add key="SmtpHost" value="xxxxx"/>
+        <add key="SmtpSsl" value="false"/>
+        <add key="SmtpPort" value="587"/>
+        <add key="SmtpUser" value="xxxxx"/>
+        <add key="SmtpPassword" value="xxxxx"/>
+        <add key="NoAccountClients" value="xxxxx"/>
+        <add key="UsePurchaseList" value="true"/>
+        <add key="PurchasingSearchDefaultDateRange" value="this-year"/>
+        <add key="AttachmentsDirectory" value="xxxxx"/>
+        <add key="AttachmentsVirtualPath" value="xxxxx"/>
+        <add key="TotalWarningMinimum" value="10000"/>
+        <add key="PurchasingSearchDefaultDateRange" value="this-year"/>
+        <add key="MongoConnectionString" value="xxxxx"/>
+        <add key="ScanningAssemblies" value="IOF.Impl"/>
+        <add key="ValidationSettings:UnobtrusiveValidationMode" value="None"/>
+        <add key="owin:AutomaticAppStartup" value="false"/>
+    </appSettings>
+
+    <system.web>
+        <compilation debug="true" strict="false" explicit="true" targetFramework="4.7"/>
+
+        <httpRuntime targetFramework="4.7"/>
+
+        <authentication mode="Forms">
+            <forms name="sselAuth.cookie" path="/" loginUrl="/login" timeout="480" protection="All" slidingExpiration="true" domain="umich.edu" cookieless="UseCookies"/>
+        </authentication>
+
+        <authorization>
+            <deny users="?"/>
+        </authorization>
+
+        <machineKey compatibilityMode="Framework20SP2" validationKey="xxxxx" decryptionKey="xxxxx" validation="SHA1" decryption="3DES"/>
+
+        <customErrors mode="Off"/>
+    </system.web>
+
+    <system.webServer>
+        <modules>
+            <add name="LnfSessionModule" type="LNF.Impl.DataAccess.SessionModule"/>
+        </modules>
+
+        <handlers>
+            <add name="AttachmentsHandler" type="IOF.Web.AttachmentsHandler, IOF.Web" path="docs/attachments*" verb="*"/>
+        </handlers>
+    </system.webServer>
+
+    <location path="ApprovalProcess.aspx">
+        <system.web>
+            <authorization>
+                <allow users="*"/>
+            </authorization>
+        </system.web>
+    </location>
+
+    <location path="Attachments.aspx">
+        <system.web>
+            <authorization>
+                <allow users="*"/>
+            </authorization>
+        </system.web>
+    </location>
+
+    <location path="docs/attachments">
+        <system.web>
+            <authorization>
+                <allow users="*"/>
+            </authorization>
+        </system.web>
+    </location>
+
+    <location path="ajax/datatables.ashx">
+        <system.web>
+            <authorization>
+                <allow users="*"/>
+            </authorization>
+        </system.web>
+    </location>
+</configuration>

@@ -46,7 +46,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendItemModifiedEmail", $"IOF #{order.POID} modified by purchaser", GetBody(order, body), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendAddAttachmentsEmail(int poid, IEnumerable<Attachment> attachments)
@@ -62,7 +62,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendAddAttachmentsEmail", $"IOF #{order.POID} attachment added by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendDeleteAttachmentEmail(int poid, string attachmentFileName)
@@ -77,7 +77,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendDeleteAttachmentEmail", $"IOF #{poid} attachment deleted by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendCancelOrderEmail(int poid, string notes)
@@ -90,7 +90,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendCancelOrderEmail", $"IOF #{order.POID} canceled by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendRejectEmail(int poid, string reason)
@@ -113,7 +113,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("LNF.Impl.EmailService.SendRejectEmail", $"IOF #{order.POID}: Rejected", sb.ToString(), email);
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendApproverEmail(int poid)
@@ -226,7 +226,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendApproverEmail", $"IOF #{order.POID}: Request By {client.DisplayName}", sb.ToString(), approver.Email);
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public void SendPurchaserEmail(int poid, string attachmentFilePath)
@@ -249,7 +249,7 @@ namespace IOF.Impl
             args.Bcc = GetBccEmails(new[] { "lnf-it@umich.edu" });
             args.Attachments = new[] { attachmentFilePath };
 
-            Providers.Email.SendMessage(args);
+            ServiceProvider.Current.Email.SendMessage(args);
         }
 
         public ApprovalProcessParameters GetApprovalProcessParameters(string encrypted)
@@ -257,10 +257,12 @@ namespace IOF.Impl
             var decrypted = Decrypt(encrypted);
             var nvc = HttpUtility.ParseQueryString(decrypted);
 
-            var result = new ApprovalProcessParameters();
-            result.POID = int.Parse(nvc["POID"] ?? throw new Exception("POID not found."));
-            result.ApproverID = int.Parse(nvc["ApproverID"] ?? throw new Exception("ApproverID not found."));
-            result.Action = nvc["Action"] ?? throw new Exception("Action not found.");
+            var result = new ApprovalProcessParameters
+            {
+                POID = int.Parse(nvc["POID"] ?? throw new Exception("POID not found.")),
+                ApproverID = int.Parse(nvc["ApproverID"] ?? throw new Exception("ApproverID not found.")),
+                Action = nvc["Action"] ?? throw new Exception("Action not found.")
+            };
 
             return result;
         }
@@ -366,8 +368,10 @@ namespace IOF.Impl
             var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
             var key = new Encryption.Data("lnfn@n0f@b");
 
-            var encryptedData = new Encryption.Data();
-            encryptedData.Base64 = encrypted;
+            var encryptedData = new Encryption.Data
+            {
+                Base64 = encrypted
+            };
 
             var decryptedData = sym.Decrypt(encryptedData, key);
             var result = decryptedData.ToString();

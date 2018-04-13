@@ -76,11 +76,11 @@ Namespace Controls
             _Order = OrderRepository.Single(POID)
             _Items = DetailRepository.GetOrderDetails(POID)
 
-            rptItems.DataSource = Items
+            rptItems.DataSource = _Items
             rptItems.DataBind()
 
-            phNoData.Visible = Items.Count() <= 0
-            rptItems.Visible = Items.Count() > 0
+            phNoData.Visible = _Items.Count() <= 0
+            rptItems.Visible = _Items.Count() > 0
 
             phUpdateOption.Visible = PurchaserCanModify()
         End Sub

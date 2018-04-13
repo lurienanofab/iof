@@ -54,19 +54,19 @@ Public Class ApprovalList
 
         If mine.Count() > 0 Then
             rptApprovalPendingMine.Visible = True
-            rptApprovalPendingMine.DataSource = CreateApprovalListItems(mine).OrderBy(Function(x) x.Sort).ToArray()
+            rptApprovalPendingMine.DataSource = CreateApprovalListItems(mine).OrderBy(Function(x) x.Sort)
             rptApprovalPendingMine.DataBind()
         Else
             If isApprover Then
                 rptApprovalPendingMine.Visible = True
-                rptApprovalPendingMine.DataSource = CreateApprovalListItems(mine).OrderBy(Function(x) x.Sort).ToArray()
+                rptApprovalPendingMine.DataSource = CreateApprovalListItems(mine).OrderBy(Function(x) x.Sort)
                 rptApprovalPendingMine.DataBind()
             Else
                 rptApprovalPendingMine.Visible = False
             End If
         End If
 
-        rptApprovalPendingOther.DataSource = CreateApprovalListItems(others).OrderBy(Function(x) x.Sort).ToArray()
+        rptApprovalPendingOther.DataSource = CreateApprovalListItems(others).OrderBy(Function(x) x.Sort)
         rptApprovalPendingOther.DataBind()
     End Sub
 

@@ -144,7 +144,7 @@ Public Class POItems
     End Sub
 
     Private Sub LoadCategories()
-        ddlCat1.DataSource = DetailRepository.GetParentCategories()
+        ddlCat1.DataSource = DetailRepository.GetParentCategories().OrderBy(Function(x) x.CategoryNumberToDouble())
         ddlCat1.DataBind()
         ddlCat1.SelectedIndex = 0
         LoadSubCategories()
@@ -152,7 +152,7 @@ Public Class POItems
 
     Private Sub LoadSubCategories()
         Dim parentId As Integer = Convert.ToInt32(ddlCat1.SelectedValue)
-        ddlCat2.DataSource = DetailRepository.GetChildCategories(parentId)
+        ddlCat2.DataSource = DetailRepository.GetChildCategories(parentId).OrderBy(Function(x) x.CategoryNumberToDouble())
         ddlCat2.DataBind()
         phChildCategory.Visible = ddlCat2.Items.Count > 0
     End Sub

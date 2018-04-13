@@ -463,8 +463,8 @@ namespace IOF.Impl
                 // current user is copying another user's order
 
                 // check for a vendor for the current user that has the same name as the po vendor
-                vendor = DA.Current.Query<Ordering.Vendor>().FirstOrDefault(x => x.ClientID == currentClientId
-                    && Ordering.PurchaseOrderItem.CleanString(x.VendorName) == Ordering.PurchaseOrderItem.CleanString(po.Vendor.VendorName));
+                vendor = DA.Current.Query<Ordering.Vendor>().Where(x => x.ClientID == currentClientId).ToList().FirstOrDefault(x =>
+                    Ordering.PurchaseOrderItem.CleanString(x.VendorName) == Ordering.PurchaseOrderItem.CleanString(po.Vendor.VendorName));
 
                 if (vendor == null)
                 {

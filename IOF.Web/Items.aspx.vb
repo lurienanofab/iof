@@ -88,7 +88,8 @@ Public Class Items
         Try
             ' Check if Part Num & Description Exists in DB Items table
             Dim items As IEnumerable(Of Item) = GetItems()
-            Dim itemId As Integer = IOFUtility.HasDuplicate(items, txtPartNum.Text, txtDescription.Text, Integer.Parse(lblItemID.Text))
+            Dim selectedItemId As Integer = Integer.Parse(hidItemID.Value)
+            Dim itemId As Integer = IOFUtility.HasDuplicate(items, txtPartNum.Text, txtDescription.Text, selectedItemId)
 
             If itemId = -1 Then
                 Dim unitPrice As Double
@@ -98,7 +99,7 @@ Public Class Items
                     Dim inventoryItemId As Integer?
                     GetInventoryItemID(ddlInventoryItem, inventoryItemId)
 
-                    ItemRepository.Update(itemId, txtPartNum.Text, txtDescription.Text, unitPrice, inventoryItemId)
+                    ItemRepository.Update(selectedItemId, txtPartNum.Text, txtDescription.Text, unitPrice, inventoryItemId)
 
                     LoadItems()
                 Else
@@ -120,18 +121,23 @@ Public Class Items
 
     Private Sub PopulateItemForm(item As Item)
         Alert1.Hide()
-        lblItemID.Text = item.ItemID.ToString()
+        hidItemID.Value = item.ItemID.ToString()
         txtPartNum.Text = item.PartNum
         txtDescription.Text = item.Description
         txtUnitPrice.Text = item.UnitPrice.ToString("###0.00")
         If StoreManager Then
-            ddlInventoryItem.SelectedValue = item.InventoryItemID.ToString()
+            Dim listItem As ListItem = ddlInventoryItem.Items.FindByValue(item.InventoryItemID.ToString())
+            If listItem IsNot Nothing Then
+                ddlInventoryItem.SelectedValue = listItem.Value
+            Else
+                ddlInventoryItem.SelectedIndex = 0
+            End If
         End If
     End Sub
 
     Private Sub ClearItemForm()
         Alert1.Hide()
-        lblItemID.Text = String.Empty
+        hidItemID.Value = String.Empty
         txtPartNum.Text = String.Empty
         txtDescription.Text = String.Empty
         txtUnitPrice.Text = String.Empty

@@ -27,7 +27,7 @@ namespace IOF.Tests
         [TestInitialize]
         public void TestSetup()
         {
-            _uow = Providers.DataAccess.StartUnitOfWork();
+            _uow = ServiceProvider.Current.Resolver.GetInstance<IUnitOfWork>();
             IOC.Container.BuildUp(this);
         }
 
