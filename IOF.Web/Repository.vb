@@ -65,9 +65,9 @@ Public Class Repository
         Dim c As Client = (From x In users
                            Where x.ClientID = Context.CurrentUser.ClientID).FirstOrDefault()
 
-        Dim result As New List(Of ListItem)
-
-        result.Add(New ListItem("-- View All --", "-1"))
+        Dim result As New List(Of ListItem) From {
+            New ListItem("-- View All --", "-1")
+        }
 
         If c IsNot Nothing Then
             ' first add the current user
@@ -76,6 +76,36 @@ Public Class Repository
             ' now add everyone else
             result.AddRange(From x In users
                             Where x.ClientID <> Context.CurrentUser.ClientID
+                            Order By x.DisplayName
+                            Select New ListItem(x.DisplayName, x.ClientID.ToString()))
+        Else
+            ' we should never get here because there should always be a current user
+            result.AddRange(From x In users
+                            Order By x.DisplayName
+                            Select New ListItem(x.DisplayName, x.ClientID.ToString()))
+        End If
+
+        Return result
+    End Function
+
+    Public Function GetAllStaff() As IEnumerable(Of ListItem)
+        Dim users As IEnumerable(Of Client) = Clients.GetAllClients(2)
+
+
+        ' must return ONLY one row, else is critical error
+        Dim c As Client = Context.CurrentUser
+
+        Dim result As New List(Of ListItem) From {
+            New ListItem("-- View All --", "-1")
+        }
+
+        If c IsNot Nothing Then
+            ' first add the current user
+            result.Add(New ListItem(c.DisplayName, c.ClientID.ToString()))
+
+            ' now add everyone else
+            result.AddRange(From x In users
+                            Where x.ClientID <> c.ClientID
                             Order By x.DisplayName
                             Select New ListItem(x.DisplayName, x.ClientID.ToString()))
         Else

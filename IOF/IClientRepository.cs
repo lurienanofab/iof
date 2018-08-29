@@ -14,7 +14,12 @@ namespace IOF
         /// Get all active clients.
         /// </summary>
         IEnumerable<Client> GetActiveClients();
-        
+
+        /// <summary>
+        /// Gets all clients. If p is greater than zero only clients with the matching privilege are selected.
+        /// </summary>
+        IEnumerable<Client> GetAllClients(int priv = 0);
+
         /// <summary>
         /// Get all clients that have at least one active vendor in the IOF system.
         /// </summary>

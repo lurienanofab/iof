@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Data = LNF.Repository.Data;
 using Ordering = LNF.Repository.Ordering;
-using System.Web.Security;
 
 namespace IOF.Impl
 {
@@ -25,6 +24,20 @@ namespace IOF.Impl
         public IEnumerable<Client> GetActiveClients()
         {
             var query = DA.Current.Query<Data.ClientInfo>().Where(x => x.ClientActive);
+            return CreateClients(query);
+        }
+
+        public IEnumerable<Client> GetAllClients(int priv = 0)
+        {
+            IQueryable<Data.ClientInfo> query;
+
+            ClientPrivilege p = (ClientPrivilege)priv;
+
+            if (priv == 0)
+                query = DA.Current.Query<Data.ClientInfo>();
+            else
+                query = DA.Current.Query<Data.ClientInfo>().Where(x => (x.Privs & p) > 0);
+
             return CreateClients(query);
         }
 

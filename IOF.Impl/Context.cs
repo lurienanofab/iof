@@ -5,12 +5,13 @@ using System;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
+using LNF.Cache;
 
 namespace IOF.Impl
 {
     public class Context : IContext
     {
-        public Client CurrentUser => CreateClient(HttpContext.Current.Request.GetCurrentUser());
+        public Client CurrentUser => CreateClient(CacheManager.Current.CurrentUser);
 
         public Uri Url => HttpContext.Current.Request.Url;
 

@@ -89,7 +89,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <asp:DropDownList runat="server" ID="ddlClients" DataSourceID="odsClients" DataTextField="Text" DataValueField="Value" CssClass="other-client-id form-control" />
-                            <asp:ObjectDataSource runat="server" ID="odsClients" TypeName="IOF.Web.Repository" SelectMethod="GetAllClients" />
+                            <asp:ObjectDataSource runat="server" ID="odsClients" TypeName="IOF.Web.Repository" SelectMethod="GetAllStaff" />
                             <div class="input-group-addon">
                                 <input type="checkbox" runat="server" id="chkIncludeSelf" class="include-self" checked />
                                 Include Myself

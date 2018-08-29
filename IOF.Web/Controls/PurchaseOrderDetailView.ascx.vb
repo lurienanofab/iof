@@ -9,8 +9,6 @@ Namespace Controls
         Public Event TitleCommand As CommandEventHandler
         Public Event ItemDescriptionCommand As CommandEventHandler
         Public Event RowDataBound As GridViewRowEventHandler
-
-        Private _Total As Double = 0
         Private _Order As Order
         Private _Items As IEnumerable(Of Detail)
 
@@ -33,12 +31,7 @@ Namespace Controls
         Public Property PurchaserMode As Boolean
         Public Property CanDeleteItems As Boolean
         Public Property UseAjax As Boolean = True
-
-        Public ReadOnly Property Total As Double
-            Get
-                Return _Total
-            End Get
-        End Property
+        Public ReadOnly Property Total As Double = 0
 
         Public ReadOnly Property Order As Order
             Get
@@ -95,7 +88,7 @@ Namespace Controls
 
         Protected Function PurchaserCanModify() As Boolean
             If PurchaserMode Then
-                Return (Order.StatusID = Status.Ordered OrElse Order.StatusID = Status.Approved OrElse Order.StatusID = Status.ProcessedManually) AndAlso Order.PurchaserID.GetValueOrDefault() = Request.GetCurrentUser().ClientID
+                Return (Order.StatusID = Status.Ordered OrElse Order.StatusID = Status.Approved OrElse Order.StatusID = Status.ProcessedManually) AndAlso Order.PurchaserID.GetValueOrDefault() = IOFContext.CurrentUser.ClientID
             Else
                 Return False
             End If
