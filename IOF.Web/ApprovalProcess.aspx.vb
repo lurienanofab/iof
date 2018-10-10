@@ -5,14 +5,14 @@ Public Class ApprovalProcess
 
     Public Property Parameters As ApprovalProcessParameters
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             Try
                 Alert1.Hide()
                 GetParameters()
 
                 Dim po As Order = OrderRepository.Single(Parameters.POID)
-                Dim approver As Approver = ClientRepository.GetApprover(po)
+                Dim approver As Client = ClientRepository.Single(Parameters.ApproverID)
 
                 If Not Request.IsAuthenticated Then
                     ' sign in as the approver
@@ -22,9 +22,7 @@ Public Class ApprovalProcess
                 lblApproverName.Text = approver.DisplayName
 
                 'Make sure this IOF has not been processed before
-                'Dim realApprover As Client = ClientRepository.SingleClient(Parameters.ApproverID)
 
-                'Dim errmsg As String = String.Empty
                 If po.StatusID = Status.AwaitingApproval Then
                     If Parameters.Action = "Approve" Then
                         ' Approve PO - Update Status to Approved

@@ -12,11 +12,16 @@ namespace IOF.Impl
     {
         public IEnumerable<ItemReportItem> GetItemReport(int itemId)
         {
-            using (var dba = DA.Current.GetAdapter())
+            using (var adap = DA.Current.GetAdapter())
             {
-                var dt = dba
-                    .ApplyParameters(new { Action = "ItemReport", ItemID = itemId })
-                    .FillDataTable("IOF.dbo.spReport_Select");
+                adap.SelectCommandTypeStoredProcedure()
+                    .SelectCommandText("IOF.dbo.spReport_Select")
+                    .AddSelectParameter("Action", "ItemReport")
+                    .AddSelectParameter("ItemID", itemId);
+
+                var dt = new DataTable();
+
+                adap.Fill(dt);
 
                 var result = dt.AsEnumerable().Select(x => new ItemReportItem()
                 {
