@@ -113,7 +113,7 @@ Public Class POItems
         ddlItems.Items.Insert(0, New ListItem("-- To copy a previously purchased item, select it from list --", "-1"))
     End Sub
 
-    Protected Sub ddlItems_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlItems.SelectedIndexChanged
+    Protected Sub DdlItems_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlItems.SelectedIndexChanged
         Dim args As New FormArgs()
         If ddlItems.SelectedValue = "-1" Then
             args.State = ItemState.AddNew
@@ -166,12 +166,12 @@ Public Class POItems
         End If
     End Sub
 
-    Protected Sub ddlCat1_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlCat1.SelectedIndexChanged
+    Protected Sub DdlCat1_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlCat1.SelectedIndexChanged
         LoadSubCategories()
         LoadPurchaseOrderDetails()
     End Sub
 
-    Protected Sub btnAddItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAddItem.Click
+    Protected Sub BtnAddItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAddItem.Click
         Try
             Dim catId As Integer = GetSelectedCatID()
             Dim podid As Integer = GetSelectedPODID()
@@ -247,7 +247,7 @@ Public Class POItems
         End Try
     End Sub
 
-    Protected Sub btnOverwriteDB_Click(ByVal sender As Object, ByVal e As EventArgs)
+    Protected Sub BtnOverwriteDB_Click(ByVal sender As Object, ByVal e As EventArgs)
         ShowModalDialog = False
         Dim po As Order = OrderRepository.Single(POID)
         Dim items As IEnumerable(Of Item) = ItemRepository.GetOrderItems(POID)
@@ -295,7 +295,7 @@ Public Class POItems
         End If
     End Function
 
-    Protected Sub btnUpdateItem_Click(sender As Object, e As EventArgs)
+    Protected Sub BtnUpdateItem_Click(sender As Object, e As EventArgs)
         Try
             LoadPurchaseOrderDetails()
 
@@ -317,7 +317,7 @@ Public Class POItems
                         DetailRepository.Delete(podid)
 
                         ' Add new item like new
-                        btnAddItem_Click(btnAddItem, Nothing)
+                        BtnAddItem_Click(btnAddItem, Nothing)
                     End If
                 Else
                     ' PartNum or Description have not changed, change all applicable fields
@@ -349,7 +349,7 @@ Public Class POItems
         End Try
     End Sub
 
-    Protected Sub btnCancelUpdate_Click(sender As Object, e As EventArgs) Handles btnCancelUpdate.Click
+    Protected Sub BtnCancelUpdate_Click(sender As Object, e As EventArgs) Handles btnCancelUpdate.Click
         PopulateItemForm(New FormArgs With {.State = ItemState.AddNew})
         LoadPurchaseOrderDetails()
     End Sub
@@ -368,23 +368,24 @@ Public Class POItems
         End If
     End Sub
 
-    Protected Sub gvItems_RowCommand(sender As Object, e As CommandEventArgs)
+    Protected Sub GvItems_RowCommand(sender As Object, e As CommandEventArgs)
         Dim pod As Detail
         If e.CommandName = "EditItem" Then
             LoadPurchaseOrderDetails()
             hidSelectedPODID.Value = e.CommandArgument.ToString()
             pod = DetailRepository.Single(GetSelectedPODID())
-            Dim args As New FormArgs()
-            args.State = ItemState.ModifyItem
-            args.ItemID = pod.ItemID
-            args.PartNum = pod.PartNum
-            args.Description = pod.Description
-            args.CategoryID = pod.CategoryID
-            args.CategoryParentID = pod.ParentID
-            args.Quantity = pod.Quantity
-            args.Unit = pod.Unit
-            args.UnitPrice = pod.UnitPrice
-            args.InventoryItemID = pod.InventoryItemID.GetValueOrDefault()
+            Dim args As New FormArgs With {
+                .State = ItemState.ModifyItem,
+                .ItemID = pod.ItemID,
+                .PartNum = pod.PartNum,
+                .Description = pod.Description,
+                .CategoryID = pod.CategoryID,
+                .CategoryParentID = pod.ParentID,
+                .Quantity = pod.Quantity,
+                .Unit = pod.Unit,
+                .UnitPrice = pod.UnitPrice,
+                .InventoryItemID = pod.InventoryItemID.GetValueOrDefault()
+            }
             PopulateItemForm(args)
         ElseIf e.CommandName = "DeleteItem" Then
             'LoadPurchaseOrderDetails()
@@ -395,7 +396,7 @@ Public Class POItems
         LoadPurchaseOrderDetails()
     End Sub
 
-    Protected Sub btnSavePOItems_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSavePOItems.Click
+    Protected Sub BtnSavePOItems_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSavePOItems.Click
         If PurchaseOrderDetailView1.RowCount = 0 Then
             lblErrItems.Text = "You must add one or more items to your purchase order."
         Else
@@ -407,7 +408,7 @@ Public Class POItems
         End If
     End Sub
 
-    Protected Sub btnCancelPOItems_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnCancelPOItems.Click
+    Protected Sub BtnCancelPOItems_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnCancelPOItems.Click
         If Action = "UseExisting" Then
             Response.Redirect($"~/POConfirm.aspx?Action={Action}&POID={POID}&FromPOID={FromPOID}")
         Else

@@ -105,7 +105,7 @@
                     <div class="col-md-offset-1 col-md-11 div-spacing">
                         <div>
                             <asp:Button runat="server" ID="btnAddItem" Text="Add Item" CssClass="btn btn-default" />
-                            <asp:Button runat="server" ID="btnUpdateItem" Text="Modify Item" Visible="false" OnClick="btnUpdateItem_Click" CssClass="btn btn-default" />
+                            <asp:Button runat="server" ID="btnUpdateItem" Text="Modify Item" Visible="false" OnClick="BtnUpdateItem_Click" CssClass="btn btn-default" />
                             <asp:Button runat="server" ID="btnCancelUpdate" Text="Cancel" Visible="false" CssClass="btn btn-default" />
                         </div>
 
@@ -121,7 +121,7 @@
     </div>
 
     <!-- Items List -->
-    <uc:PurchaseOrderDetailView runat="server" ID="PurchaseOrderDetailView1" HideTitle="true" EnableItemDescriptionLink="true" OnItemDescriptionCommand="gvItems_RowCommand" ItemDescriptionCommandName="EditItem" CanDeleteItems="true" />
+    <uc:PurchaseOrderDetailView runat="server" ID="PurchaseOrderDetailView1" HideTitle="true" EnableItemDescriptionLink="true" OnItemDescriptionCommand="GvItems_RowCommand" ItemDescriptionCommandName="EditItem" CanDeleteItems="true" />
     
     <asp:HiddenField runat="server" ID="hidSelectedPODID" />
     <asp:Button runat="server" ID="btnSavePOItems" Text="Save and Continue" CssClass="btn btn-default" />
@@ -133,7 +133,7 @@
         <div style="text-align: center; padding: 10px;">
             It appears that you've ordered this item before, would you like to overwrite it (all fields except price will be affected in your historical IOFs)?<br />
             <br />
-            <asp:Button runat="server" ID="btnOverwriteDB" Text="Overwrite" OnClick="btnOverwriteDB_Click" CssClass="button" />
+            <asp:Button runat="server" ID="btnOverwriteDB" Text="Overwrite" OnClick="BtnOverwriteDB_Click" CssClass="button" />
             <input type="button" id="btnCancel" value="Cancel" class="button" />
         </div>
     </div>
