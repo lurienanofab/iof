@@ -10,8 +10,13 @@ namespace IOF.Models
         public string PartNum { get; set; }
         public string Description { get; set; }
         public int CategoryID { get; set; }
-        public int ParentID { get; set; }
         public string CategoryName { get; set; }
+        public string CategoryNumber { get; set; }
+        public bool CategoryActive { get; set; }
+        public int ParentID { get; set; }
+        public string ParentCategoryName { get; set; }
+        public string ParentCategoryNumber { get; set; }
+        public bool ParentCategoryActive { get; set; }
         public double Quantity { get; set; }
         public double UnitPrice { get; set; }
         public string Unit { get; set; }
@@ -20,6 +25,6 @@ namespace IOF.Models
         public double ExtPrice { get { return Quantity * UnitPrice; } }
         public DateTime CreatedDate { get; set; }
         public int? InventoryItemID { get; set; }
-        public string CategoryNumber { get; set; }
+        public bool IsCategoryActive() => ParentCategoryActive && CategoryActive;
     }
 }

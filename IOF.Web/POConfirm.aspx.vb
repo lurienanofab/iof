@@ -167,7 +167,7 @@ Public Class POConfirm
         Return result
     End Function
 
-    Protected Sub btnSetAccountOK_Click(sender As Object, e As EventArgs)
+    Protected Sub BtnSetAccountOK_Click(sender As Object, e As EventArgs)
         Dim origPOID As Integer = Convert.ToInt32(hidSetAccountPOID.Value)
         Dim copy As Order = OrderRepository.Copy(origPOID, Convert.ToInt32(ddlSetAccount.SelectedValue))
         If copy.POID <> 0 Then
@@ -189,60 +189,67 @@ Public Class POConfirm
         Response.Redirect(url)
     End Sub
 
-    Protected Sub btnSendToApprover_Click(sender As Object, e As EventArgs) Handles btnSendToApprover.Click
+    Protected Sub BtnSendToApprover_Click(sender As Object, e As EventArgs) Handles btnSendToApprover.Click
         Try
             LoadPO()
 
-            ' Send Email to Approver
-            EmailService.SendApproverEmail(POID)
+            ' Check for inactive categories
+            If ValidateCategories() Then
+                ' Send Email to Approver
+                EmailService.SendApproverEmail(POID)
 
-            SetPOMessage($"Thank you. IOF #{POID} has been sent to the approver!")
+                SetPOMessage($"Thank you. IOF #{POID} has been sent to the approver!")
 
-            ' Update PO Status to "Awaiting Approval"
-            OrderRepository.RequestApproval(POID)
+                ' Update PO Status to "Awaiting Approval"
+                OrderRepository.RequestApproval(POID)
 
-            LoadPO()
+                LoadPO()
 
-            PrivCheck()
+                PrivCheck()
+            End If
         Catch ex As Exception
             SetPOMessage(ex)
         End Try
     End Sub
 
-    Protected Sub btnSendToPurchaser_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSendToPurchaser.Click
+    Protected Sub BtnSendToPurchaser_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnSendToPurchaser.Click
         Try
             LoadPO()
 
-            ' Approve PO - Update Status to Approved
-            OrderRepository.Approve(POID, IOFContext.CurrentUser.ClientID)
+            If ValidateCategories() Then
+                ' Approve PO - Update Status to Approved
+                OrderRepository.Approve(POID, IOFContext.CurrentUser.ClientID)
 
-            ' Send email to purchaser
-            Dim filePath As String = PdfService.CreatePDF(POID)
-            EmailService.SendPurchaserEmail(POID, filePath)
-            SetPOMessage($"Thank you. IOF #{POID} has been sent to the purchaser!")
+                ' Send email to purchaser
+                Dim filePath As String = PdfService.CreatePDF(POID)
+                EmailService.SendPurchaserEmail(POID, filePath)
+                SetPOMessage($"Thank you. IOF #{POID} has been sent to the purchaser!")
 
-            LoadPO()
-            PrivCheck()
+                LoadPO()
+                PrivCheck()
+            End If
         Catch ex As Exception
             SetPOMessage(ex)
         End Try
     End Sub
 
-    Protected Sub btnMarkCompleteAndPrint_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMarkCompleteAndPrint.Click
+    Protected Sub BtnMarkCompleteAndPrint_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnMarkCompleteAndPrint.Click
         Try
             ' Changes Status to Completed and Print PDF
             If POID > 0 Then
                 LoadPO()
 
-                OrderRepository.ManuallyProcess(PurchaseOrderHeaderView1.Order.POID)
+                If ValidateCategories() Then
+                    OrderRepository.ManuallyProcess(PurchaseOrderHeaderView1.Order.POID)
 
-                SetPOMessage($"Thank you. IOF #{POID} has been manually processed.")
+                    SetPOMessage($"Thank you. IOF #{POID} has been manually processed.")
 
-                RegisterPrintScript()
+                    RegisterPrintScript()
 
-                LoadPO()
+                    LoadPO()
 
-                PrivCheck()
+                    PrivCheck()
+                End If
             Else
                 Throw New Exception("Invalid POID")
             End If
@@ -255,12 +262,12 @@ Public Class POConfirm
         Page.ClientScript.RegisterClientScriptBlock([GetType](), "print_iof", $"window.open('{VirtualPathUtility.ToAbsolute("~/PrintIOF.ashx")}?POID={POID}', 'print_iof')", True)
     End Sub
 
-    Protected Sub btnKeepDraft_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnKeepDraft.Click
+    Protected Sub BtnKeepDraft_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnKeepDraft.Click
         ' Since Status is already Draft, just redirect user to home page
         Response.Redirect("~")
     End Sub
 
-    Protected Sub btnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
+    Protected Sub BtnDelete_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnDelete.Click
         Try
             If OrderRepository.DeleteDraft(POID) Then
                 Response.Redirect("~")
@@ -272,4 +279,13 @@ Public Class POConfirm
         End Try
     End Sub
 
+    Private Function ValidateCategories() As Boolean
+        Dim hasInactive As Boolean = PurchaseOrderDetailView1.Items.Any(Function(x) Not x.IsCategoryActive())
+        If hasInactive Then
+            SetPOMessage("At least one item has an inactive category. Please ensure all items are using an active category.")
+            Return False
+        Else
+            Return True
+        End If
+    End Function
 End Class

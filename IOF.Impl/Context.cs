@@ -5,20 +5,21 @@ using System;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
-using LNF.Cache;
 
 namespace IOF.Impl
 {
     public class Context : IContext
     {
-        public Client CurrentUser => CreateClient(CacheManager.Current.CurrentUser);
+        public HttpContextBase ContextBase => new HttpContextWrapper(HttpContext.Current);
 
-        public Uri Url => HttpContext.Current.Request.Url;
+        public Client CurrentUser => CreateClient(ContextBase.CurrentUser());
+
+        public Uri Url => ContextBase.Request.Url;
 
         public IPrincipal User
         {
-            get { return HttpContext.Current.User; }
-            set { HttpContext.Current.User = value; }
+            get { return ContextBase.User; }
+            set { ContextBase.User = value; }
         }
 
         public void SignIn(Client client)
@@ -32,11 +33,11 @@ namespace IOF.Impl
             var ticket = new FormsAuthenticationTicket(formsAuthTicket.Version, formsAuthTicket.Name, formsAuthTicket.IssueDate, formsAuthTicket.Expiration, formsAuthTicket.IsPersistent, string.Join("|", roles), formsAuthTicket.CookiePath);
             authCookie.Value = FormsAuthentication.Encrypt(ticket);
             authCookie.Expires = formsAuthTicket.Expiration;
-            HttpContext.Current.Response.Cookies.Add(authCookie);
+            ContextBase.Response.Cookies.Add(authCookie);
 
             var ident = new GenericIdentity(c.UserName);
             var user = new GenericPrincipal(ident, roles);
-            HttpContext.Current.User = user;
+            ContextBase.User = user;
         }
 
         public string VirtualToAbsolute(string virtualPath)
@@ -53,20 +54,20 @@ namespace IOF.Impl
 
         public object GetSessionValue(string key)
         {
-            return HttpContext.Current.Session[key];
+            return ContextBase.Session[key];
         }
 
         public void SetSessionValue(string key, object value)
         {
-            HttpContext.Current.Session[key] = value;
+            ContextBase.Session[key] = value;
         }
 
         public void RemoveSessionValue(string key)
         {
-            HttpContext.Current.Session.Remove(key);
+            ContextBase.Session.Remove(key);
         }
         
-        private Client CreateClient(ClientItem c)
+        private Client CreateClient(IClient c)
         {
             return new Client()
             {
@@ -80,7 +81,7 @@ namespace IOF.Impl
 
         public string MapPath(string path)
         {
-            return HttpContext.Current.Server.MapPath(path);
+            return ContextBase.Server.MapPath(path);
         }
     }
 }

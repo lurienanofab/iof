@@ -36,7 +36,7 @@
                         <asp:Label runat="server" ID="lblItemDescription" Visible='<%#Not EnableItemDescriptionLink%>' CssClass="value"><%#Eval("Description")%></asp:Label>
                         <asp:LinkButton runat="server" ID="btnItemDescriptionLink" Text='<%#Eval("Description")%>' OnCommand="btnItemDescriptionLink_Command" CommandArgument='<%# Eval("PODID")%>' CommandName='<%#ItemDescriptionCommandName%>' Visible='<%#EnableItemDescriptionLink%>'></asp:LinkButton>
                     </td>
-                    <td class="category" data-value='<%#Eval("CategoryName")%>'>
+                    <td class='<%#GetCategoryClass(Container.DataItem)%>' data-value='<%#Eval("CategoryName")%>'>
                         <span class="value"><%#Eval("CategoryName")%></span>
                     </td>
                     <td class="quantity text-right" data-value='<%#Eval("Quantity")%>' data-unit='<%#Eval("Unit")%>'>

@@ -12,55 +12,45 @@ namespace IOF.Impl
     {
         public IEnumerable<ItemReportItem> GetItemReport(int itemId)
         {
-            using (var adap = DA.Current.GetAdapter())
+            var dt = DA.Command()
+                .Param("Action", "ItemReport")
+                .Param("ItemID", itemId)
+                .FillDataTable("IOF.dbo.spReport_Select");
+
+            var result = dt.AsEnumerable().Select(x => new ItemReportItem()
             {
-                adap.SelectCommandTypeStoredProcedure()
-                    .SelectCommandText("IOF.dbo.spReport_Select")
-                    .AddSelectParameter("Action", "ItemReport")
-                    .AddSelectParameter("ItemID", itemId);
+                Year = x.Field<int>("Year"),
+                Month = x.Field<int>("MonthNum"),
+                MonthName = x.Field<string>("MonthName"),
+                TotalUnit = x.Field<double>("TotalUnit"),
+                TotalCost = x.Field<double>("TotalCost")
+            });
 
-                var dt = new DataTable();
-
-                adap.Fill(dt);
-
-                var result = dt.AsEnumerable().Select(x => new ItemReportItem()
-                {
-                    Year = x.Field<int>("Year"),
-                    Month = x.Field<int>("MonthNum"),
-                    MonthName = x.Field<string>("MonthName"),
-                    TotalUnit = x.Field<double>("TotalUnit"),
-                    TotalCost = x.Field<double>("TotalCost")
-                });
-
-                return result;
-            }
+            return result;
         }
 
         public IEnumerable<StoreManagerReportItem> GetStoreManagerReport()
         {
-            using (var dba = DA.Current.GetAdapter())
+            var dt = DA.Command().FillDataTable("IOF.dbo.Report_StoreManager");
+
+            var result = dt.AsEnumerable().Select(x => new StoreManagerReportItem()
             {
-                var dt = dba.FillDataTable("IOF.dbo.Report_StoreManager");
+                ItemID = x.Field<int>("ItemID"),
+                Description = x.Field<string>("Description"),
+                VendorID = x.Field<int>("VendorID"),
+                VendorName = x.Field<string>("VendorName"),
+                UnitPrice = Convert.ToDouble(x.Field<decimal>("UnitPrice")),
+                Unit = x.Field<string>("Unit"),
+                LastOrdered = x.Field<DateTime?>("LastOrdered"),
+                StoreItemID = x.Field<int?>("StoreItemID"),
+                StoreDescription = x.Field<string>("StoreDescription"),
+                StorePackagePrice = x.Field<double?>("StorePackagePrice"),
+                StorePackageQuantity = x.Field<int?>("StorePackageQty"),
+                StoreUnitPrice = x.Field<double?>("StoreUnitPrice"),
+                LastPurchased = x.Field<DateTime?>("LastPurchased")
+            });
 
-                var result = dt.AsEnumerable().Select(x => new StoreManagerReportItem()
-                {
-                    ItemID = x.Field<int>("ItemID"),
-                    Description = x.Field<string>("Description"),
-                    VendorID = x.Field<int>("VendorID"),
-                    VendorName = x.Field<string>("VendorName"),
-                    UnitPrice = Convert.ToDouble(x.Field<decimal>("UnitPrice")),
-                    Unit = x.Field<string>("Unit"),
-                    LastOrdered = x.Field<DateTime?>("LastOrdered"),
-                    StoreItemID = x.Field<int?>("StoreItemID"),
-                    StoreDescription = x.Field<string>("StoreDescription"),
-                    StorePackagePrice = x.Field<double?>("StorePackagePrice"),
-                    StorePackageQuantity = x.Field<int?>("StorePackageQty"),
-                    StoreUnitPrice = x.Field<double?>("StoreUnitPrice"),
-                    LastPurchased = x.Field<DateTime?>("LastPurchased")
-                });
-
-                return result;
-            }
+            return result;
         }
     }
 }

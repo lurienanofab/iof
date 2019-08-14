@@ -1,6 +1,6 @@
 ﻿using IOF.Models;
 using LNF;
-using LNF.Email;
+using LNF.Models.Mail;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -46,10 +46,10 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendItemModifiedEmail", $"IOF #{order.POID} modified by purchaser", GetBody(order, body), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
-        public void SendAddAttachmentsEmail(int poid, IEnumerable<Attachment> attachments)
+        public void SendAddAttachmentsEmail(int poid, IEnumerable<Models.Attachment> attachments)
         {
             var order = OrderRepository.Single(poid);
 
@@ -62,7 +62,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendAddAttachmentsEmail", $"IOF #{order.POID} attachment added by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public void SendDeleteAttachmentEmail(int poid, string attachmentFileName)
@@ -77,7 +77,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendDeleteAttachmentEmail", $"IOF #{poid} attachment deleted by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public void SendCancelOrderEmail(int poid, string notes)
@@ -90,7 +90,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendCancelOrderEmail", $"IOF #{order.POID} canceled by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public void SendRejectEmail(int poid, string reason)
@@ -113,7 +113,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("LNF.Impl.EmailService.SendRejectEmail", $"IOF #{order.POID}: Rejected", sb.ToString(), email);
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public void SendApproverEmail(int poid)
@@ -226,7 +226,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendApproverEmail", $"IOF #{order.POID}: Request By {client.DisplayName}", sb.ToString(), approver.Email);
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public void SendPurchaserEmail(int poid, string attachmentFilePath)
@@ -249,7 +249,7 @@ namespace IOF.Impl
             args.Bcc = GetBccEmails(new[] { "lnf-it@umich.edu" });
             args.Attachments = new[] { attachmentFilePath };
 
-            ServiceProvider.Current.Email.SendMessage(args);
+            ServiceProvider.Current.Mail.SendMessage(args);
         }
 
         public ApprovalProcessParameters GetApprovalProcessParameters(string encrypted)

@@ -202,6 +202,11 @@ em.text-muted {
         vertical-align: top;
     }
 
+.category.inactive .value {
+    color: red;
+    text-decoration: line-through;
+}
+
 /*
     These two rules exist solely to make csslint not complain that
     the tr.odd/tr.even rules above are overqualified (the tr is indeed

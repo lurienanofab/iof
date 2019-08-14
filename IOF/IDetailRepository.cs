@@ -18,5 +18,6 @@ namespace IOF
         int AddCategory(int parentId, string categoryName, string categoryNumber);
         void ModifyCategory(int categoryId, string categoryName, string categoryNumber);
         void DeleteCategory(int categoryId);
+        IEnumerable<Detail> GetInvalidCategoryItems(int poid);
     }
 }

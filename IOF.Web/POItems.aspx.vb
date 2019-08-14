@@ -53,7 +53,7 @@ Public Class POItems
             If ddlCat2.Items.FindByValue(args.CategoryID.ToString()) IsNot Nothing Then
                 ddlCat2.SelectedValue = args.CategoryID.ToString()
             Else
-                ddlCat2.SelectedIndex = 0
+                ddlCat2.SelectedIndex = -1
             End If
         ElseIf args.CategoryID = 0 AndAlso args.CategoryParentID = 0 Then
             ddlCat1.SelectedIndex = 0

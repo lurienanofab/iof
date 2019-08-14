@@ -21,6 +21,12 @@
         <uc:PurchaseOrderAttachments runat="server" ID="PurchaseOrderAttachments1" ReadOnly="false" />
 
         <div class="btn-spacing">
+            <asp:PlaceHolder runat="server" ID="phPOMessage" Visible="false">
+                <div style="margin: 0 0 10px 5px; color: #ff0000;">
+                    <asp:Literal runat="server" ID="litPOMessage" />
+                </div>
+            </asp:PlaceHolder>
+
             <asp:HyperLink runat="server" ID="hypPrintIOF" CssClass="btn btn-default print-iof" Target="_blank">Print IOF</asp:HyperLink>
             <asp:Button runat="server" ID="btnSendToApprover" Text="Send for Approval" Visible="false" CssClass="btn btn-default" />
             <asp:Button runat="server" ID="btnSendToPurchaser" Text="Send for Purchaser" Visible="false" CssClass="btn btn-default" />
@@ -29,12 +35,6 @@
             <asp:Button runat="server" ID="btnDelete" Text="Delete" CssClass="btn btn-default" OnClientClick="return confirm('Are you sure you want to delete this purchase order permanently?');" />
             <asp:HyperLink runat="server" ID="hypReturn" CssClass="btn btn-default">Return</asp:HyperLink>
         </div>
-
-        <asp:PlaceHolder runat="server" ID="phPOMessage" Visible="false">
-            <div style="margin-top: 10px; color: #ff0000;">
-                <asp:Literal runat="server" ID="litPOMessage" />
-            </div>
-        </asp:PlaceHolder>
     </asp:PlaceHolder>
 
     <asp:Panel runat="server" ID="panSetAccount" Visible="false">
@@ -54,7 +54,7 @@
                             <asp:DropDownList runat="server" ID="ddlSetAccount" DataTextField="AccountName" DataValueField="AccountID" CssClass="form-control" />
                         </div>
                         <div style="margin-bottom: 10px;">
-                            <asp:Button runat="server" ID="btnSetAccountOK" Text="OK" Width="65" OnClick="btnSetAccountOK_Click" CssClass="btn btn-default" />
+                            <asp:Button runat="server" ID="btnSetAccountOK" Text="OK" Width="65" OnClick="BtnSetAccountOK_Click" CssClass="btn btn-default" />
                             <button type="button" class="btn btn-default back-button">Cancel</button>
                         </div>
                     </div>

@@ -94,6 +94,18 @@ Namespace Controls
             End If
         End Function
 
+        Protected Function GetCategoryClass(item As Detail) As String
+            Dim action As String = Request.QueryString("Action")
+
+            If action = "New" OrElse action = "Unfinished" OrElse action = "UseExisting" Then
+                If Not item.IsCategoryActive() Then
+                    Return "category inactive"
+                End If
+            End If
+
+            Return "category"
+        End Function
+
         Protected Sub rptItems_ItemDataBound(sender As Object, e As RepeaterItemEventArgs)
             If e.Item.ItemType = ListItemType.Footer Then
                 Dim litTotalExtPrice As Literal = CType(e.Item.FindControl("litTotalExtPrice"), Literal)

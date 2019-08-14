@@ -16,7 +16,7 @@ namespace IOF
         void Reject(int poid, int approverId);
         void ManuallyProcess(int poid);
         bool IsInventoryControlled(int poid);
-        bool IsClaimed(int poid, out int purchaserId, out string purchaserName, out string reqNum, out string realPO, out string purchNotes);        
+        bool IsClaimed(int poid, out int purchaserId, out string purchaserName, out string reqNum, out string realPO, out string purchNotes);
         void Claim(int poid, int clientId);
         void SaveRealPO(int poid, string reqNum, string realPO, string purchNotes);
         void Cancel(int poid);

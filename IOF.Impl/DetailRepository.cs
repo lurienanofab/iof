@@ -12,6 +12,8 @@ namespace IOF.Impl
         public IContext Context { get; }
         public IItemRepository ItemRepository { get; }
 
+        private IEnumerable<Ordering.PurchaseOrderCategory> _parents;
+
         public DetailRepository(IContext context, IItemRepository itemRepo)
         {
             Context = context;
@@ -128,7 +130,7 @@ namespace IOF.Impl
 
         public IEnumerable<Category> GetParentCategories()
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderCategory>().Where(x => x.Active && x.ParentID == 0);
+            var query = SelectParentCategories().Where(x => x.Active);
             return CreateCategories(query);
         }
 
@@ -197,6 +199,52 @@ namespace IOF.Impl
             cat.Active = false;
         }
 
+        public IEnumerable<Detail> GetInvalidCategoryItems(int poid)
+        {
+            var result = new List<Detail>();
+
+            var parents = SelectParentCategories();
+
+            var details = DA.Current.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid);
+
+            foreach (var d in details)
+            {
+                if (!d.Category.Active)
+                    result.Add(CreateDetail(d));
+                else
+                {
+                    if (!d.Category.IsParent())
+                    {
+                        var p = parents.FirstOrDefault(x => x.CatID == d.Category.ParentID);
+                        if (p == null) throw new Exception($"No parent category found for CatID = {d.Category.CatID}");
+                        if (!p.Active)
+                            result.Add(CreateDetail(d));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private IEnumerable<Ordering.PurchaseOrderCategory> SelectParentCategories()
+        {
+            if (_parents == null)
+                _parents = DA.Current.Query<Ordering.PurchaseOrderCategory>().Where(x => x.ParentID == 0).ToList();
+            return _parents;
+        }
+
+        private Ordering.PurchaseOrderCategory FindParentCategory(Ordering.PurchaseOrderDetail pod)
+        {
+            Ordering.PurchaseOrderCategory p;
+
+            if (pod.Category.IsParent())
+                p = pod.Category;
+            else
+                p = SelectParentCategories().First(x => x.CatID == pod.Category.ParentID);
+
+            return p;
+        }
+
         private Detail CreateDetail(Ordering.PurchaseOrderDetail pod)
         {
             return new Detail()
@@ -207,9 +255,13 @@ namespace IOF.Impl
                 PartNum = pod.Item.PartNum,
                 Description = pod.Item.Description,
                 CategoryID = pod.Category.CatID,
-                ParentID = pod.Category.ParentID,
                 CategoryName = pod.Category.CatName,
                 CategoryNumber = pod.Category.CatNo,
+                CategoryActive = pod.Category.Active,
+                ParentID = pod.Category.ParentID,
+                ParentCategoryName = FindParentCategory(pod).CatName,
+                ParentCategoryNumber = FindParentCategory(pod).CatNo,
+                ParentCategoryActive = FindParentCategory(pod).Active,
                 Quantity = pod.Quantity,
                 UnitPrice = pod.UnitPrice,
                 Unit = pod.Unit,
@@ -230,9 +282,13 @@ namespace IOF.Impl
                 PartNum = x.Item.PartNum,
                 Description = x.Item.Description,
                 CategoryID = x.Category.CatID,
-                ParentID = x.Category.ParentID,
                 CategoryName = x.Category.CatName,
                 CategoryNumber = x.Category.CatNo,
+                CategoryActive = x.Category.Active,
+                ParentID = x.Category.ParentID,
+                ParentCategoryName = FindParentCategory(x).CatName,
+                ParentCategoryNumber = FindParentCategory(x).CatNo,
+                ParentCategoryActive = FindParentCategory(x).Active,
                 Quantity = x.Quantity,
                 UnitPrice = x.UnitPrice,
                 Unit = x.Unit,
@@ -255,7 +311,7 @@ namespace IOF.Impl
             };
         }
 
-        private IEnumerable<Category> CreateCategories(IQueryable<Ordering.PurchaseOrderCategory> query)
+        private IEnumerable<Category> CreateCategories(IEnumerable<Ordering.PurchaseOrderCategory> query)
         {
             return query.Select(x => new Category()
             {
