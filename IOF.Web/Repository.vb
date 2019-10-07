@@ -50,7 +50,9 @@ Public Class Repository
     ''' Get a list of approvers that can be added by the current user. Used in ObjectDataSources (for example in POInfo.aspx).
     ''' </summary>
     Public Function GetAvailableApprovers() As IEnumerable(Of ListItem)
-        Return From x In Clients.GetAvailableApprovers(Context.CurrentUser.ClientID)
+        Dim available As IEnumerable(Of Approver) = Clients.GetAvailableApprovers(Context.CurrentUser.ClientID)
+
+        Return From x In available
                Order By x.DisplayName
                Select New ListItem(x.DisplayName, x.ClientID.ToString())
     End Function

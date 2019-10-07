@@ -184,6 +184,11 @@ Public Class POInfo
     Protected Sub btnAddApprover_Click(ByVal sender As Object, ByVal e As EventArgs)
         Try
             Dim approverId As Integer = Convert.ToInt32(ddlApprovers.SelectedValue)
+
+            If approverId = 0 Then
+                Throw New Exception("Please select an approver.")
+            End If
+
             ClientRepository.AddOrUpdateApprover(IOFContext.CurrentUser.ClientID, approverId, False)
             LoadApprovers()
             ddlApprover.SelectedValue = approverId.ToString()

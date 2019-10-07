@@ -371,7 +371,7 @@ namespace IOF.Impl
         {
             return query.Select(x => new Approver()
             {
-                ClientID = 0,
+                ClientID = x.ClientID,
                 UserName = x.UserName,
                 ApproverID = x.ClientID,
                 LName = x.LName,
