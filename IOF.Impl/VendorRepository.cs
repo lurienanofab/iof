@@ -2,6 +2,7 @@
 using LNF;
 using LNF.Repository;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Ordering = LNF.Repository.Ordering;
 
@@ -71,6 +72,34 @@ namespace IOF.Impl
 
             DA.Current.Insert(vend);
 
+            if (clientId > 0 && AutoAddStoreManagerVendor())
+            {
+                // check for a store manager vendor with same name
+                var storeManagerVendor = DA.Current.Query<Ordering.Vendor>().Where(x => x.VendorName == vendorName && x.ClientID == 0).FirstOrDefault();
+
+                if (storeManagerVendor == null)
+                {
+                    // add a store manager vendor if the name was not found
+
+                    vend = new Ordering.Vendor()
+                    {
+                        ClientID = 0,
+                        VendorName = vendorName,
+                        Address1 = address1,
+                        Address2 = address2,
+                        Address3 = address3,
+                        Contact = contact,
+                        Phone = phone,
+                        Fax = fax,
+                        URL = url,
+                        Email = email,
+                        Active = true
+                    };
+
+                    DA.Current.Insert(vend);
+                }
+            }
+
             return CreateVendor(vend);
         }
 
@@ -93,6 +122,13 @@ namespace IOF.Impl
         {
             var vend = Require<Ordering.Vendor>(x => x.VendorID, vendorId);
             vend.Active = false;
+        }
+
+        private bool AutoAddStoreManagerVendor()
+        {
+            var setting = ConfigurationManager.AppSettings["AutoAddStoreManagerVendor"];
+            bool.TryParse(setting, out bool result);
+            return result;
         }
 
         private Vendor CreateVendor(Ordering.Vendor vendor)

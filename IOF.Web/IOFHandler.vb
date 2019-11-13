@@ -24,6 +24,9 @@ Public MustInherit Class IOFHandler
     <SetterProperty>
     Public Property ItemRepository As IItemRepository
 
+    <SetterProperty>
+    Public Property VendorRepository As IVendorRepository
+
     Public Sub New()
         IOC.Container.BuildUp(Me)
     End Sub

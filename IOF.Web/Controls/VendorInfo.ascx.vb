@@ -58,11 +58,11 @@ Namespace Controls
             End If
         End Sub
 
-        Protected Sub btnVendorCancel_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Protected Sub BtnVendorCancel_Click(ByVal sender As Object, ByVal e As EventArgs)
             RaiseEvent CancelClick(sender, e)
         End Sub
 
-        Protected Sub btnUpdateVendor_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Protected Sub BtnUpdateVendor_Click(ByVal sender As Object, ByVal e As EventArgs)
             Try
                 VendorID = Convert.ToInt32(hidVendorID.Value)
 
@@ -76,7 +76,7 @@ Namespace Controls
             End Try
         End Sub
 
-        Protected Sub btnAddVendor_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Protected Sub BtnAddVendor_Click(ByVal sender As Object, ByVal e As EventArgs)
             Try
                 If String.IsNullOrEmpty(txtVendorName.Text) Then
                     Alert1.Show("Vendor Name is required.")

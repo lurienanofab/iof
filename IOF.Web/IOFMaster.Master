@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/datatables/css/dataTables.bootstrap.min.css" />
+    <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/lib/select2/css/select2.min.css" />
     <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/styles/bootstrap/sticky-footer.css" />
     <link rel="stylesheet" href="<%=ResolveUrl("~/styles/site.css?v=20190627")%>" />
 
@@ -62,6 +63,7 @@
     <script src="https://ssel-apps.eecs.umich.edu/static/lib/moment/moment.min.js"></script>
     <script src="https://ssel-apps.eecs.umich.edu/static/lib/numeral/numeral.min.js"></script>
 
+    <script src="<%=ResolveUrl("~/scripts/bootstrap3-typeahead.min.js")%>"></script>
     <script src="<%=ResolveUrl("~/scripts/iofsearch.js?v=20180327")%>"></script>
     <script src="<%=ResolveUrl("~/scripts/purchsearch.js?v=20180327")%>"></script>
 
@@ -89,6 +91,16 @@
 
         var iofSearch = $(".iofsearch").iofsearch();
         var purchSearch = $(".purchsearch").purchsearch();
+
+        var ajaxUrl = '<%=ResolveUrl("~/ajax/vendor.ashx?command=get-vendor-names&clientId=0")%>';
+
+        $(".vendor-name").each(function () {
+            var $input = $(this);
+
+            $.get(ajaxUrl, function (data) {
+                $input.typeahead({ source: data });
+            });
+        });
     </script>
 
     <script>

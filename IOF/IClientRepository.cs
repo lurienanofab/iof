@@ -23,7 +23,7 @@ namespace IOF
         /// <summary>
         /// Get all clients that have at least one active vendor in the IOF system.
         /// </summary>
-        IEnumerable<Client> GetClientsWithVendor();
+        IEnumerable<Client> GetClientsWithVendor(bool? active = null);
 
         /// <summary>
         /// Get the purchaser for an order.

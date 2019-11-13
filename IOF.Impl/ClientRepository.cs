@@ -41,10 +41,15 @@ namespace IOF.Impl
             return CreateClients(query);
         }
 
-        public IEnumerable<Client> GetClientsWithVendor()
+        public IEnumerable<Client> GetClientsWithVendor(bool? active = null)
         {
+            // active:
+            //      null:  return all clients, active and inactive (this is the default)
+            //      true:  return active clients only
+            //      false: return inactive clients only
+
             var current = DA.Current.Query<Ordering.Vendor>().Where(x => x.Active && x.ClientID > 0).Select(x => x.ClientID).Distinct().ToArray();
-            var clients = DA.Current.Query<Data.ClientInfo>().Where(x => x.ClientActive && current.Contains(x.ClientID));
+            var clients = DA.Current.Query<Data.ClientInfo>().Where(x => x.ClientActive == active.GetValueOrDefault(x.ClientActive) && current.Contains(x.ClientID));
             return CreateClients(clients);
         }
 

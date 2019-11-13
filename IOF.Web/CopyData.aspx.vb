@@ -78,7 +78,7 @@ Public Class CopyData
             phCopyToClientName.Visible = True
         End If
 
-        ddlCopyFromClient.DataSource = CreateClientListItems(ClientRepository.GetClientsWithVendor())
+        ddlCopyFromClient.DataSource = CreateClientListItems(ClientRepository.GetClientsWithVendor(Nothing))
         ddlCopyFromClient.DataBind()
 
         If IsStoreManager() Then
