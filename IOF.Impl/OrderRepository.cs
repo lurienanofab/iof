@@ -225,8 +225,9 @@ namespace IOF.Impl
 
             if (track)
             {
-                // only track if order status set (TrackingCheckpoints.Ordered) or the PO has already been ordered and the RealPO is changing (TrackingCheckpoints.Modified)
-                TrackingUtility.Track(checkpoint, po, Context.CurrentUser.ClientID);
+                // only track if order status set (TrackingCheckpoints.Ordered) or the PO has
+                // already been ordered and the RealPO is changing (TrackingCheckpoints.Modified)
+                TrackingUtility.Track(checkpoint, po, Context.CurrentUser.ClientID, new { po.ReqNum, po.RealPO, po.PurchaserNotes });
             }
         }
 
