@@ -1,9 +1,10 @@
 ﻿using IOF.Models;
+using LNF;
 using LNF.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
@@ -14,7 +15,7 @@ namespace IOF.Impl
 
         private IEnumerable<Ordering.PurchaseOrderCategory> _parents;
 
-        public DetailRepository(IContext context, IItemRepository itemRepo)
+        public DetailRepository(IProvider provider, IContext context, IItemRepository itemRepo) : base(provider)
         {
             Context = context;
             ItemRepository = itemRepo;
@@ -28,13 +29,13 @@ namespace IOF.Impl
 
         public IEnumerable<Detail> GetOrderDetails(int poid)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid);
+            var query = DataSession.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid);
             return CreateDetails(query);
         }
 
         public IEnumerable<Detail> GetItemDetails(int itemId)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderDetail>().Where(x => x.Item.ItemID == itemId);
+            var query = DataSession.Query<Ordering.PurchaseOrderDetail>().Where(x => x.Item.ItemID == itemId);
             return CreateDetails(query);
         }
 
@@ -53,7 +54,7 @@ namespace IOF.Impl
                 UnitPrice = unitPrice
             };
 
-            DA.Current.Insert(pod);
+            DataSession.Insert(pod);
 
             return CreateDetail(pod);
         }
@@ -111,7 +112,7 @@ namespace IOF.Impl
 
             // track the iof modification
             if (track)
-                LNF.Ordering.TrackingUtility.Track(Ordering.TrackingCheckpoints.Modified, detail.PurchaseOrder.POID, Context.CurrentUser.ClientID);
+                LNF.Ordering.Tracking.Track(LNF.Ordering.TrackingCheckpoints.Modified, detail.PurchaseOrder.POID, Context.CurrentUser.ClientID);
 
             return changes;
         }
@@ -119,7 +120,7 @@ namespace IOF.Impl
         public void Delete(int podid)
         {
             var pod = Require<Ordering.PurchaseOrderDetail>(x => x.PODID, podid);
-            DA.Current.Delete(pod);
+            DataSession.Delete(pod);
         }
 
         public Category GetCategory(Detail detail)
@@ -136,13 +137,13 @@ namespace IOF.Impl
 
         public IEnumerable<Category> GetChildCategories(int parentId)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderCategory>().Where(x => x.Active && x.ParentID == parentId);
+            var query = DataSession.Query<Ordering.PurchaseOrderCategory>().Where(x => x.Active && x.ParentID == parentId);
             return CreateCategories(query);
         }
 
         public int AddCategory(int parentId, string categoryName, string categoryNumber)
         {
-            var existing = DA.Current.Query<Ordering.PurchaseOrderCategory>().FirstOrDefault(x => x.ParentID == parentId && x.CatNo == categoryNumber);
+            var existing = DataSession.Query<Ordering.PurchaseOrderCategory>().FirstOrDefault(x => x.ParentID == parentId && x.CatNo == categoryNumber);
 
             if (existing != null)
             {
@@ -165,7 +166,7 @@ namespace IOF.Impl
                 Active = true
             };
 
-            DA.Current.Insert(cat);
+            DataSession.Insert(cat);
 
             return cat.CatID;
         }
@@ -174,7 +175,7 @@ namespace IOF.Impl
         {
             var cat = Require<Ordering.PurchaseOrderCategory>(x => x.CatID, categoryId);
 
-            var existing = DA.Current.Query<Ordering.PurchaseOrderCategory>().FirstOrDefault(x => x.ParentID == cat.ParentID && x.CatNo == categoryNumber && x.CatID != categoryId);
+            var existing = DataSession.Query<Ordering.PurchaseOrderCategory>().FirstOrDefault(x => x.ParentID == cat.ParentID && x.CatNo == categoryNumber && x.CatID != categoryId);
 
             if (existing != null)
             {
@@ -205,7 +206,7 @@ namespace IOF.Impl
 
             var parents = SelectParentCategories();
 
-            var details = DA.Current.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid);
+            var details = DataSession.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid);
 
             foreach (var d in details)
             {
@@ -229,7 +230,7 @@ namespace IOF.Impl
         private IEnumerable<Ordering.PurchaseOrderCategory> SelectParentCategories()
         {
             if (_parents == null)
-                _parents = DA.Current.Query<Ordering.PurchaseOrderCategory>().Where(x => x.ParentID == 0).ToList();
+                _parents = DataSession.Query<Ordering.PurchaseOrderCategory>().Where(x => x.ParentID == 0).ToList();
             return _parents;
         }
 

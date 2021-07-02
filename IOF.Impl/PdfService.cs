@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
@@ -187,8 +187,8 @@ namespace IOF.Impl
                         }
                     }
 
-                    var ct = new ColumnText(ps.GetOverContent(pageNumber));
-                    ct.Alignment = Element.ALIGN_LEFT;
+                    var ct = new ColumnText(ps.GetOverContent(pageNumber)) { Alignment = Element.ALIGN_LEFT };
+
                     ct.SetSimpleColumn(x, y, width, y + 100);
                     ct.AddElement(tbl);
                     ct.Go();
@@ -206,10 +206,12 @@ namespace IOF.Impl
 
         private static PdfPTable CreateTable(PdfItem item, float width)
         {
-            var tbl = new PdfPTable(10);
-            tbl.TotalWidth = width;
-            tbl.LockedWidth = true;
-            tbl.HorizontalAlignment = Element.ALIGN_LEFT;
+            var tbl = new PdfPTable(10)
+            {
+                TotalWidth = width,
+                LockedWidth = true,
+                HorizontalAlignment = Element.ALIGN_LEFT
+            };
 
             float[] wcol =
             {
@@ -275,9 +277,12 @@ namespace IOF.Impl
             // create an inner table for cell spacing (otherwise we get one long solid border)
             var tbl = new PdfPTable(1);
             ctext = string.IsNullOrEmpty(ctext) ? string.Empty : ctext;
-            var c = new PdfPCell(new Phrase(ctext.Trim(), new Font(Font.FontFamily.TIMES_ROMAN, 8.0F)));
-            c.HorizontalAlignment = halign;
-            c.VerticalAlignment = valign;
+
+            var c = new PdfPCell(new Phrase(ctext.Trim(), new Font(Font.FontFamily.TIMES_ROMAN, 8.0F)))
+            {
+                HorizontalAlignment = halign,
+                VerticalAlignment = valign
+            };
 
             if (border)
             {
@@ -292,11 +297,13 @@ namespace IOF.Impl
 
             tbl.AddCell(c);
 
-            var result = new PdfPCell(tbl);
-            result.Colspan = colspan;
-            result.Border = Rectangle.NO_BORDER;
-            result.PaddingRight = 2.0F;
-            result.PaddingLeft = 2.0F;
+            var result = new PdfPCell(tbl)
+            {
+                Colspan = colspan,
+                Border = Rectangle.NO_BORDER,
+                PaddingRight = 2.0F,
+                PaddingLeft = 2.0F
+            };
 
             return result;
         }

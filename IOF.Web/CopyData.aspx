@@ -23,7 +23,7 @@
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Client</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyToClient" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyToClient" DataTextField="Text" DataValueField="Value" CssClass="form-control" TabIndex="1" />
                         <asp:PlaceHolder runat="server" ID="phCopyToClientName" Visible="false">
                             <p class="form-control-static">
                                 <asp:Literal runat="server" ID="litCopyToClientName"></asp:Literal>
@@ -45,14 +45,14 @@
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Client</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyFromClient" DataTextField="Text" DataValueField="Value" AutoPostBack="true" OnSelectedIndexChanged="ddlCopyFromClient_SelectedIndexChanged" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyFromClient" DataTextField="Text" DataValueField="Value" AutoPostBack="true" OnSelectedIndexChanged="ddlCopyFromClient_SelectedIndexChanged" CssClass="form-control" TabIndex="2" />
                     </div>
                 </div>
 
                 <div class="form-group form-group-sm">
                     <label class="col-md-1 control-label">Vendor</label>
                     <div class="col-md-3">
-                        <asp:DropDownList runat="server" ID="ddlCopyFromVendor" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
+                        <asp:DropDownList runat="server" ID="ddlCopyFromVendor" DataTextField="Text" DataValueField="Value" CssClass="form-control" TabIndex="3" />
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@
                     <div class="col-md-offset-1 col-md-3">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" runat="server" id="chkCopyFromIncludeItems0" checked />
+                                <input type="checkbox" runat="server" id="chkCopyFromIncludeItems0" tabindex="4" checked />
                                 Include Items
                             </label>
                         </div>
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <asp:Button runat="server" ID="btnCopyData" Text="Copy Data" OnClick="btnCopyData_Click" CssClass="btn btn-default" />
+    <asp:Button runat="server" ID="btnCopyData" Text="Copy Data" OnClick="btnCopyData_Click" CssClass="btn btn-default" TabIndex="5" />
 
     <uc:BootstrapAlert runat="server" ID="Alert1" />
 </asp:Content>

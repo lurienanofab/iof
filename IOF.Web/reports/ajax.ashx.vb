@@ -1,13 +1,12 @@
 ﻿Imports IOF.Models
+Imports LNF
 Imports Newtonsoft.Json
-Imports StructureMap.Attributes
 
 Namespace Reports
     Public Class Ajax
         Inherits IOFHandler
 
-        <SetterProperty>
-        Public Property ReportService As IReportService
+        <Inject> Public Property ReportService As IReportService
 
         Overrides Sub ProcessRequest(ByVal context As HttpContext)
             context.Response.ContentType = "application/json"

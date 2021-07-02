@@ -22,6 +22,18 @@
     <link rel="stylesheet" href="https://ssel-apps.eecs.umich.edu/static/styles/bootstrap/sticky-footer.css" />
     <link rel="stylesheet" href="<%=ResolveUrl("~/styles/site.css?v=20190627")%>" />
 
+    <asp:PlaceHolder runat="server" ID="phGoogleAnalytics" Visible="false">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23459384-6"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', '<%=GoogleAnalyticsTrackingID()%>');
+        </script>
+    </asp:PlaceHolder>
+
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -101,18 +113,6 @@
                 $input.typeahead({ source: data });
             });
         });
-    </script>
-
-    <script>
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-4869731-5']);
-        _gaq.push(['_trackPageview']);
-
-        (function () {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
-        })();
     </script>
 
     <asp:ContentPlaceHolder runat="server" ID="scripts">

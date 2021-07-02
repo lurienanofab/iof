@@ -5,12 +5,6 @@ Imports LNF.Ordering
 Public Class TrackIOF
     Inherits IOFPage
 
-    Public Enum CheckPoint
-        Ordered = 7
-        Cancelled = 11
-    End Enum
-
-
     Public Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         If Action = "Detail" Then
             ShowTrackingDetail()
@@ -26,15 +20,14 @@ Public Class TrackIOF
     Public Sub ShowTrackingDetail()
         phSearch.Visible = False
         phDetail.Visible = True
-        lblPOID.Text = POID.ToString()
-        rptTracking.DataSource = TrackingUtility.SelectTrackingData(POID)
-        rptTracking.DataBind()
+        Tracking1.POID = POID
+        Tracking1.LoadTrackingData()
     End Sub
 
     Public Sub ShowTrackingList()
         phSearch.Visible = True
         phDetail.Visible = False
-        lblPOID.Text = String.Empty
+        Tracking1.Visible = False
     End Sub
 
     Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -98,9 +91,9 @@ Public Class TrackIOF
                 xnode = Nothing
                 attr = Nothing
 
-                Dim cp As CheckPoint = CType(cid, CheckPoint)
+                Dim cp As Controls.Tracking.CheckPoint = CType(cid, Controls.Tracking.CheckPoint)
                 Select Case cp
-                    Case CheckPoint.Ordered
+                    Case Web.Controls.Tracking.CheckPoint.Ordered
                         xnode = xdoc.SelectSingleNode("/data/add[@key='RealPOID']")
                         If xnode IsNot Nothing Then
                             attr = xnode.Attributes("value")

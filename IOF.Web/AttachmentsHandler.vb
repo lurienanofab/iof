@@ -1,5 +1,4 @@
 ﻿Imports Newtonsoft.Json
-Imports StructureMap.Attributes
 
 Public Class AttachmentsHandler
     Inherits IOFHandler

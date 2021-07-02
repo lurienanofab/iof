@@ -1,6 +1,5 @@
-﻿Imports IOF.Models
+﻿Imports LNF.Impl.Repository.Ordering
 Imports LNF.Repository
-Imports LNF.Repository.Ordering
 
 Public Class Categories
     Inherits IOFPage
@@ -10,7 +9,6 @@ Public Class Categories
             CheckPrivs()
         End If
     End Sub
-
 
     Private Sub ShowNode(node As TreeNode, selected As Boolean, expanded As Boolean)
         If node Is Nothing Then Return
@@ -36,7 +34,7 @@ Public Class Categories
 
     Private Sub AddChildNodes(ByRef parentNode As TreeNode)
         Dim parentId As Integer = Convert.ToInt32(parentNode.Value)
-        Dim children As PurchaseOrderCategory() = DA.Current.Query(Of PurchaseOrderCategory)().Where(Function(x) x.ParentID = parentId AndAlso x.Active).ToArray()
+        Dim children As PurchaseOrderCategory() = DataSession.Query(Of PurchaseOrderCategory)().Where(Function(x) x.ParentID = parentId AndAlso x.Active).ToArray()
         For Each c As PurchaseOrderCategory In children
             Dim tn As New TreeNode(String.Format("[{1}] {0}", c.CatName, c.CatNo), c.CatID.ToString())
             parentNode.ChildNodes.Add(tn)

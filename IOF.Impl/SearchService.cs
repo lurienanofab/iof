@@ -1,20 +1,24 @@
 ﻿using IOF.Models;
-using LNF.Repository;
+using LNF;
+using LNF.DataAccess;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
     public class SearchService : ISearchService
     {
+        public IProvider Provider { get; }
         public IContext Context { get; }
+        public ISession DataSession => Provider.DataAccess.Session;
 
-        public SearchService(IContext context)
+        public SearchService(IProvider provider, IContext context)
         {
+            Provider = provider;
             Context = context;
         }
 
@@ -52,7 +56,7 @@ namespace IOF.Impl
 
         private SearchResult<OrderSearchItem> GetOrderResultFromDatabase(OrderSearchArgs args)
         {
-            var builder = DA.Current.QueryBuilder<Ordering.PurchaseOrderSearch>();
+            var builder = DataSession.QueryBuilder<Ordering.PurchaseOrderSearch>();
 
             var statusIds = args.GetStatusIds();
 
@@ -202,7 +206,7 @@ namespace IOF.Impl
             //      Unordered = 1
             //      Ordered = 2
 
-            var query = DA.Current.Query<Ordering.PurchaserSearch>();
+            var query = DataSession.Query<Ordering.PurchaserSearch>();
 
             var statusIds = args.GetStatusIds();
 
@@ -293,7 +297,7 @@ namespace IOF.Impl
 
         private IEnumerable<OrderSearchItem> GetItemsFromDatabase(OrderSearchArgs args)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderSearch>();
+            var query = DataSession.Query<Ordering.PurchaseOrderSearch>();
 
             var statusIds = args.GetStatusIds();
 

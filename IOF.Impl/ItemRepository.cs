@@ -1,14 +1,17 @@
 ﻿using IOF.Models;
+using LNF;
 using LNF.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using Inventory = LNF.Repository.Inventory;
-using Ordering = LNF.Repository.Ordering;
+using Inventory = LNF.Impl.Repository.Inventory;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
     public class ItemRepository : RepositoryBase, IItemRepository
     {
+        public ItemRepository(IProvider provider) : base(provider) { }
+
         public Item Single(int itemId)
         {
             var item = Require<Ordering.PurchaseOrderItem>(x => x.ItemID, itemId);
@@ -17,19 +20,19 @@ namespace IOF.Impl
 
         public IEnumerable<Item> GetOrderItems(int poid, bool? active = true)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid && x.Item.Active == active.GetValueOrDefault(x.Item.Active));
+            var query = DataSession.Query<Ordering.PurchaseOrderDetail>().Where(x => x.PurchaseOrder.POID == poid && x.Item.Active == active.GetValueOrDefault(x.Item.Active));
             return CreateItems(query);
         }
 
         public IEnumerable<Item> GetVendorItems(int vendorId, bool? active = true)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderItem>().Where(x => x.Vendor.VendorID == vendorId && x.Active == active.GetValueOrDefault(x.Active));
+            var query = DataSession.Query<Ordering.PurchaseOrderItem>().Where(x => x.Vendor.VendorID == vendorId && x.Active == active.GetValueOrDefault(x.Active));
             return CreateItems(query);
         }
 
         public IEnumerable<Item> GetClientItems(int clientId, bool? active = true)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderItem>().Where(x => x.Vendor.ClientID == clientId && x.Active == active.GetValueOrDefault(x.Active));
+            var query = DataSession.Query<Ordering.PurchaseOrderItem>().Where(x => x.Vendor.ClientID == clientId && x.Active == active.GetValueOrDefault(x.Active));
             return CreateItems(query);
         }
 
@@ -48,7 +51,7 @@ namespace IOF.Impl
                 Vendor = toVendor
             }).ToList();
 
-            DA.Current.Insert(items);
+            DataSession.Insert(items);
 
             // return the new items
             return CreateItems(items.AsQueryable());
@@ -58,7 +61,7 @@ namespace IOF.Impl
         {
             if (item.InventoryItemID.HasValue)
             {
-                var inventoryItem = Require<Inventory.Item>(x => x.ItemID, item.InventoryItemID.Value);
+                var inventoryItem = Require<Inventory.InventoryItem>(x => x.ItemID, item.InventoryItemID.Value);
                 return CreateInventoryItem(inventoryItem);
             }
 
@@ -67,7 +70,7 @@ namespace IOF.Impl
 
         public IEnumerable<InventoryItem> GetInventoryItems()
         {
-            var query = DA.Current.Query<Inventory.Item>().Where(x => x.Active);
+            var query = DataSession.Query<Inventory.InventoryItem>().Where(x => x.Active);
             return CreateInventoryItems(query);
         }
 
@@ -80,10 +83,10 @@ namespace IOF.Impl
                 InventoryItemID = inventoryItemId,
                 PartNum = partNum,
                 UnitPrice = unitPrice,
-                Vendor = DA.Current.Single<Ordering.Vendor>(vendorId)
+                Vendor = DataSession.Single<Ordering.Vendor>(vendorId)
             };
 
-            DA.Current.Insert(item);
+            DataSession.Insert(item);
 
             return CreateItem(item);
         }
@@ -154,7 +157,7 @@ namespace IOF.Impl
             }).ToList();
         }
 
-        private InventoryItem CreateInventoryItem(Inventory.Item inventoryItem)
+        private InventoryItem CreateInventoryItem(Inventory.InventoryItem inventoryItem)
         {
             return new InventoryItem()
             {
@@ -164,7 +167,7 @@ namespace IOF.Impl
             };
         }
 
-        private IEnumerable<InventoryItem> CreateInventoryItems(IQueryable<Inventory.Item> query)
+        private IEnumerable<InventoryItem> CreateInventoryItems(IQueryable<Inventory.InventoryItem> query)
         {
             return query.Select(x => new InventoryItem()
             {

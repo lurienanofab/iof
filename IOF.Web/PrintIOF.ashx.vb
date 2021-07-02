@@ -1,11 +1,10 @@
 ﻿Imports System.IO
-Imports StructureMap.Attributes
+Imports LNF
 
 Public Class PrintIOF
     Inherits IOFHandler
 
-    <SetterProperty>
-    Public Property PdfService As IPdfService
+    <Inject> Public Property PdfService As IPdfService
 
     Overrides Sub ProcessRequest(ByVal context As HttpContext)
         Dim poid As Integer = GetPOID(context)

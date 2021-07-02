@@ -1,21 +1,24 @@
 ﻿using IOF.Models;
+using LNF;
 using LNF.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using Data = LNF.Repository.Data;
-using Ordering = LNF.Repository.Ordering;
+using Data = LNF.Impl.Repository.Data;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
     public class AccountRepository : RepositoryBase, IAccountRepository
     {
+        public AccountRepository(IProvider provider) : base(provider) { }
+
         public Account Single(int clientId, int? accountId)
         {
             if (!accountId.HasValue)
                 return null;
 
             var acct = Require<Data.Account>(x => x.AccountID, accountId.Value);
-            var poa = DA.Current.Single<Ordering.PurchaseOrderAccount>(new Ordering.PurchaseOrderAccount() { ClientID = clientId, AccountID = accountId.Value });
+            var poa = DataSession.Single<Ordering.PurchaseOrderAccount>(new Ordering.PurchaseOrderAccount() { ClientID = clientId, AccountID = accountId.Value });
            
             int cid = 0;
             bool active = false;
@@ -38,7 +41,7 @@ namespace IOF.Impl
 
         public IEnumerable<Account> GetActiveAccounts(int clientId)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderAccount>().Where(x => x.ClientID == clientId && x.Active);
+            var query = DataSession.Query<Ordering.PurchaseOrderAccount>().Where(x => x.ClientID == clientId && x.Active);
 
             var result = CreateAccounts(query).Where(x => x.Active); //need to check Active again to exclude inactive accounts (not just inactive in IOF)
 
@@ -48,14 +51,14 @@ namespace IOF.Impl
         public IEnumerable<Account> GetAvailableAccounts(int clientId)
         {
             var current = GetActiveAccounts(clientId).Select(x => x.AccountID).ToArray();
-            var query = DA.Current.Query<Data.ClientAccountInfo>().Where(x => x.ClientID == clientId && x.ClientAccountActive && !current.Contains(x.AccountID));
+            var query = DataSession.Query<Data.ClientAccountInfo>().Where(x => x.ClientID == clientId && x.ClientAccountActive && !current.Contains(x.AccountID));
             var result = CreateAccounts(query);
             return result;
         }
 
         public IEnumerable<Account> GetAllAccounts()
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrderAccount>();
+            var query = DataSession.Query<Ordering.PurchaseOrderAccount>();
             var result = CreateAccounts(query);
             return result;
         }
@@ -75,13 +78,13 @@ namespace IOF.Impl
         {
             var acct = new Ordering.PurchaseOrderAccount { AccountID = accountId, ClientID = clientId };
 
-            var existing = DA.Current.Single<Ordering.PurchaseOrderAccount>(acct);
+            var existing = DataSession.Single<Ordering.PurchaseOrderAccount>(acct);
 
             if (existing == null)
             {
                 //insert new
                 acct.Active = true;
-                DA.Current.Insert(acct);
+                DataSession.Insert(acct);
                 return CreateAccount(acct);
             }
             else
@@ -116,7 +119,7 @@ namespace IOF.Impl
 
         private IEnumerable<Account> CreateAccounts(IQueryable<Ordering.PurchaseOrderAccount> query)
         {
-            var join = query.Join(DA.Current.Query<Data.Account>(),
+            var join = query.Join(DataSession.Query<Data.Account>(),
                 o => o.AccountID,
                 i => i.AccountID,
                 (o, i) => new { PurchaseOrderAccount = o, Account = i });

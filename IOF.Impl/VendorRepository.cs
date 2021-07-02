@@ -4,12 +4,14 @@ using LNF.Repository;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
     public class VendorRepository : RepositoryBase, IVendorRepository
     {
+        public VendorRepository(IProvider provider) : base(provider) { }
+
         public Vendor Single(int vendorId)
         {
             var vendor = Require<Ordering.Vendor>(x => x.VendorID, vendorId);
@@ -18,14 +20,14 @@ namespace IOF.Impl
 
         public IEnumerable<Vendor> GetActiveVendors(int clientId)
         {
-            var query = DA.Current.Query<Ordering.Vendor>().Where(x => x.ClientID == clientId && x.Active);
+            var query = DataSession.Query<Ordering.Vendor>().Where(x => x.ClientID == clientId && x.Active);
             return CreateVendors(query);
         }
 
         public IEnumerable<Vendor> GetAllVendors()
         {
             // returns both active and inactive
-            var query = DA.Current.Query<Ordering.Vendor>();
+            var query = DataSession.Query<Ordering.Vendor>();
             return CreateVendors(query);
         }
 
@@ -48,14 +50,14 @@ namespace IOF.Impl
                 Active = vend.Active
             };
 
-            DA.Current.Insert(copy);
+            DataSession.Insert(copy);
 
             return CreateVendor(copy);
         }
 
         public Vendor Add(int clientId, string vendorName, string address1, string address2, string address3, string contact, string phone, string fax, string url, string email)
         {
-            var vend = new Ordering.Vendor()
+            var vend1 = new Ordering.Vendor()
             {
                 ClientID = clientId,
                 VendorName = vendorName,
@@ -70,18 +72,18 @@ namespace IOF.Impl
                 Active = true
             };
 
-            DA.Current.Insert(vend);
+            DataSession.Insert(vend1);
 
             if (clientId > 0 && AutoAddStoreManagerVendor())
             {
                 // check for a store manager vendor with same name
-                var storeManagerVendor = DA.Current.Query<Ordering.Vendor>().Where(x => x.VendorName == vendorName && x.ClientID == 0).FirstOrDefault();
+                var storeManagerVendor = DataSession.Query<Ordering.Vendor>().Where(x => x.VendorName == vendorName && x.ClientID == 0).FirstOrDefault();
 
                 if (storeManagerVendor == null)
                 {
                     // add a store manager vendor if the name was not found
 
-                    vend = new Ordering.Vendor()
+                    var vend2 = new Ordering.Vendor()
                     {
                         ClientID = 0,
                         VendorName = vendorName,
@@ -96,11 +98,11 @@ namespace IOF.Impl
                         Active = true
                     };
 
-                    DA.Current.Insert(vend);
+                    DataSession.Insert(vend2);
                 }
             }
 
-            return CreateVendor(vend);
+            return CreateVendor(vend1);
         }
 
         public void Update(int vendorId, string vendorName, string address1, string address2, string address3, string contact, string phone, string fax, string url, string email)

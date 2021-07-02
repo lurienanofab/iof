@@ -158,7 +158,7 @@
     <asp:PlaceHolder runat="server" ID="phStoreManagerReport" Visible="false">
         <div class="panel panel-default report" data-report-type="store-manager-report">
             <div class="panel-body">
-                <img class="loader" src="/static/images/ajax-loader.gif" alt="Loading..." />
+                <img class="loader" src="//ssel-apps.eecs.umich.edu/static/images/ajax-loader.gif" alt="Loading..." />
 
                 <div class="row">
                     <div class="col-md-9">

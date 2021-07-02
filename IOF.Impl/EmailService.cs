@@ -1,6 +1,6 @@
 ﻿using IOF.Models;
 using LNF;
-using LNF.Models.Mail;
+using LNF.Mail;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,8 +19,9 @@ namespace IOF.Impl
         public IClientRepository ClientRepository { get; }
         public IAccountRepository AccountRepository { get; }
         public IAttachmentService AttachmentService { get; }
+        public IProvider Provider { get; }
 
-        public EmailService(IContext context, IOrderRepository orderRepo, IDetailRepository detailRepo, IClientRepository clientRepo, IAccountRepository accountRepo, IAttachmentService attachmentSvc)
+        public EmailService(IContext context, IOrderRepository orderRepo, IDetailRepository detailRepo, IClientRepository clientRepo, IAccountRepository accountRepo, IAttachmentService attachmentSvc, IProvider provider)
         {
             Context = context;
             OrderRepository = orderRepo;
@@ -28,6 +29,7 @@ namespace IOF.Impl
             ClientRepository = clientRepo;
             AccountRepository = accountRepo;
             AttachmentService = attachmentSvc;
+            Provider = provider;
         }
 
         public void SendItemModifiedEmail(int podid, IEnumerable<string> changes)
@@ -46,7 +48,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendItemModifiedEmail", $"IOF #{order.POID} modified by purchaser", GetBody(order, body), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public void SendAddAttachmentsEmail(int poid, IEnumerable<Models.Attachment> attachments)
@@ -62,7 +64,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendAddAttachmentsEmail", $"IOF #{order.POID} attachment added by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public void SendDeleteAttachmentEmail(int poid, string attachmentFileName)
@@ -77,7 +79,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendDeleteAttachmentEmail", $"IOF #{poid} attachment deleted by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public void SendCancelOrderEmail(int poid, string notes)
@@ -90,7 +92,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("IOF.Impl.EmailService.SendCancelOrderEmail", $"IOF #{order.POID} canceled by purchaser", GetBody(order, sb), GetClientEmail(order), GetApproverEmail(order), GetPurchaserEmail(order));
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public void SendRejectEmail(int poid, string reason)
@@ -113,7 +115,7 @@ namespace IOF.Impl
 
             var args = CreateArgs("LNF.Impl.EmailService.SendRejectEmail", $"IOF #{order.POID}: Rejected", sb.ToString(), email);
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public void SendApproverEmail(int poid)
@@ -217,16 +219,38 @@ namespace IOF.Impl
 
             sb.AppendLine("<hr/>");
 
+            bool useApproveOrReject = GetUseApproveOrRejectSetting();
+
             sb.AppendLine("<div style=\"padding: 10px;\">");
-            sb.AppendLine($"<div style=\"margin-bottom: 20px;\"><b><a href=\"{GetApproveUrl(order)}\">Approve this IOF</a></b></div>");
-            sb.AppendLine($"<div style=\"margin-bottom: 20px;\"><b><a href=\"{GetRejectUrl(order)}\">Reject this IOF</a></b></div>");
+            if (useApproveOrReject)
+            {
+                sb.AppendLine($"<div style=\"margin-bottom: 20px;\"><b><a href=\"{GetApproveOrRejectUrl(order)}\">Approve or Reject this IOF</a></b></div>");
+            }
+            else
+            {
+                sb.AppendLine($"<div style=\"margin-bottom: 20px;\"><b><a href=\"{GetApproveUrl(order)}\">Approve this IOF</a></b></div>");
+                sb.AppendLine($"<div style=\"margin-bottom: 20px;\"><b><a href=\"{GetRejectUrl(order)}\">Reject this IOF</a></b></div>");
+            }
             sb.AppendLine("</div>");
 
             sb.AppendLine("</div>");
 
             var args = CreateArgs("IOF.Impl.EmailService.SendApproverEmail", $"IOF #{order.POID}: Request By {client.DisplayName}", sb.ToString(), approver.Email);
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
+        }
+
+        private bool GetUseApproveOrRejectSetting()
+        {
+            string val = ConfigurationManager.AppSettings["UseApproveOrReject"];
+
+            if (string.IsNullOrEmpty(val))
+                return false;
+
+            if (bool.TryParse(val, out bool result))
+                return result;
+            else
+                return false;
         }
 
         public void SendPurchaserEmail(int poid, string attachmentFilePath)
@@ -249,7 +273,7 @@ namespace IOF.Impl
             args.Bcc = GetBccEmails(new[] { "lnf-it@umich.edu" });
             args.Attachments = new[] { attachmentFilePath };
 
-            ServiceProvider.Current.Mail.SendMessage(args);
+            Provider.Mail.SendMessage(args);
         }
 
         public ApprovalProcessParameters GetApprovalProcessParameters(string encrypted)
@@ -350,6 +374,14 @@ namespace IOF.Impl
             string processUrl = host + Context.VirtualToAbsolute("~/ApprovalProcess.aspx");
             string rejectUrl = processUrl + "?qs=" + HttpUtility.UrlEncode(Encrypt($"Action=Reject&POID={order.POID}&ApproverID={order.ApproverID}"));
             return rejectUrl;
+        }
+
+        private string GetApproveOrRejectUrl(Order order)
+        {
+            string host = Context.Url.GetLeftPart(UriPartial.Authority);
+            string processUrl = host + Context.VirtualToAbsolute("~/ApprovalProcess.aspx");
+            string approveUrl = processUrl + "?qs=" + HttpUtility.UrlEncode(Encrypt($"Action=ApproveOrReject&POID={order.POID}&ApproverID={order.ApproverID}"));
+            return approveUrl;
         }
 
         private string Encrypt(string text)

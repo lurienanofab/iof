@@ -21,7 +21,7 @@
                             <div class="col-md-offset-2 col-md-10">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" runat="server" id="chkStoreManager" class="store-manager" />
+                                        <input type="checkbox" runat="server" id="chkStoreManager" class="store-manager" tabindex="11" />
                                         Store Manager
                                     </label>
                                 </div>
@@ -39,7 +39,7 @@
                             </asp:PlaceHolder>
                             <asp:PlaceHolder runat="server" ID="phVendorList" Visible="false">
                                 <div class="input-group">
-                                    <asp:DropDownList runat="server" ID="ddlVendor" DataTextField="VendorName" DataValueField="VendorID" AppendDataBoundItems="true" CssClass="form-control" />
+                                    <asp:DropDownList runat="server" ID="ddlVendor" DataTextField="VendorName" DataValueField="VendorID" AppendDataBoundItems="true" CssClass="form-control" TabIndex="1" />
                                     <span class="input-group-addon separator">
                                         <span>
                                             <asp:LinkButton runat="server" ID="lbtnEditVendor" OnClick="lbtnEditVendor_Click" Text="Edit" /></span>
@@ -55,7 +55,7 @@
                         <label class="col-md-2 control-label">Account *</label>
                         <div class="col-lg-4 col-md-6">
                             <div class="input-group">
-                                <asp:DropDownList runat="server" ID="ddlAccount" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
+                                <asp:DropDownList runat="server" ID="ddlAccount" DataTextField="Text" DataValueField="Value" CssClass="form-control" TabIndex="2" />
                                 <span class="input-group-addon">
                                     <asp:LinkButton runat="server" ID="lbtnAddAccount" Text="Add" OnClick="lbtnAddAccount_Click" />
                                 </span>
@@ -67,7 +67,7 @@
                         <label class="col-md-2 control-label">Approver *</label>
                         <div class="col-lg-4 col-md-6">
                             <div class="input-group">
-                                <asp:DropDownList runat="server" ID="ddlApprover" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
+                                <asp:DropDownList runat="server" ID="ddlApprover" DataTextField="Text" DataValueField="Value" CssClass="form-control" TabIndex="3" />
                                 <span class="input-group-addon">
                                     <asp:LinkButton runat="server" ID="lbtnAddApprover" Text="Add" OnClick="lbtnAddApprover_Click" />
                                 </span>
@@ -78,14 +78,14 @@
                     <div class="form-group form-group-sm">
                         <label class="col-md-2 control-label">Date Needed *</label>
                         <div class="col-lg-2 col-md-4">
-                            <asp:TextBox runat="server" ID="txtNeededDate" CssClass="date-picker form-control"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtNeededDate" CssClass="date-picker form-control" TabIndex="4"></asp:TextBox>
                         </div>
                     </div>
 
                     <div class="form-group form-group-sm">
                         <label class="col-md-2 control-label">Shipping</label>
                         <div class="col-lg-2 col-md-4">
-                            <asp:DropDownList runat="server" ID="ddlShippingMethod" DataSourceID="odsShippingMethod" DataTextField="Text" DataValueField="Value" CssClass="form-control" />
+                            <asp:DropDownList runat="server" ID="ddlShippingMethod" DataSourceID="odsShippingMethod" DataTextField="Text" DataValueField="Value" CssClass="form-control" TabIndex="5" />
                             <asp:ObjectDataSource runat="server" ID="odsShippingMethod" TypeName="IOF.Web.Repository"  SelectMethod="GetAllShippingMethods" />
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="form-group form-group-sm">
                         <label class="col-md-2 control-label">Notes</label>
                         <div class="col-lg-4 col-md-6">
-                            <asp:TextBox ID="txtNotes" runat="server" Rows="5" TextMode="MultiLine" CssClass="form-control" />
+                            <asp:TextBox ID="txtNotes" runat="server" Rows="5" TextMode="MultiLine" CssClass="form-control" TabIndex="6" />
                         </div>
                     </div>
 
@@ -101,7 +101,7 @@
                         <div class="col-md-offset-2 col-md-10">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" runat="server" id="chkOversized" />
+                                    <input type="checkbox" runat="server" id="chkOversized" tabindex="7" />
                                     Oversized
                                 </label>
                             </div>
@@ -112,7 +112,7 @@
                         <div class="col-md-offset-2 col-md-10">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" runat="server" id="chkAttention" />
+                                    <input type="checkbox" runat="server" id="chkAttention" tabindex="8" />
                                     Is Urgent?
                                 </label>
                             </div>
@@ -121,8 +121,8 @@
 
                     <div class="form-group form-group-sm">
                         <div class="col-md-offset-2 col-md-4">
-                            <asp:Button runat="server" ID="btnSavePOInfo" Text="Save and Continue" OnClick="btnSavePOInfo_Click" CssClass="btn btn-default" />
-                            <button type="reset" class="btn btn-default">Clear</button>
+                            <asp:Button runat="server" ID="btnSavePOInfo" Text="Save and Continue" OnClick="BtnSavePOInfo_Click" CssClass="btn btn-default" TabIndex="9" />
+                            <button type="reset" class="btn btn-default" tabindex="10">Clear</button>
                             <uc:BootstrapAlert runat="server" ID="Alert1" />
                         </div>
                     </div>

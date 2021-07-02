@@ -1,12 +1,15 @@
 ﻿using IOF.Impl;
-using LNF.Models.Data;
+using LNF;
+using LNF.Data;
+using LNF.DataAccess;
+using LNF.Impl.Repository.Data;
 using LNF.Repository;
-using LNF.Repository.Data;
 using Moq;
-using StructureMap;
+using SimpleInjector;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Principal;
 
 namespace IOF.Tests
@@ -19,26 +22,23 @@ namespace IOF.Tests
 
         static IOC()
         {
+            Container = new Container();
+
             _session = new Dictionary<string, object>();
 
-            Container = new Container(x =>
-            {
-                var mock = CreateContext("http://lnf-dev.eecs.umich.edu/iof", 1301);
+            var mock = CreateContext("http://lnf-dev.eecs.umich.edu/iof", 1301);
 
-                x.For<IContext>().Use(mock.Object);
-
-                x.For<IAccountRepository>().Use<AccountRepository>();
-                x.For<IClientRepository>().Use<ClientRepository>();
-                x.For<IDetailRepository>().Use<DetailRepository>();
-                x.For<IItemRepository>().Use<ItemRepository>();
-                x.For<IOrderRepository>().Use<OrderRepository>();
-                x.For<IVendorRepository>().Use<VendorRepository>();
-
-                x.For<IAttachmentService>().Use<AttachmentService>();
-                x.For<IEmailService>().Use<EmailService>();
-                x.For<IPdfService>().Use<PdfService>();
-                x.For<IExcelService>().Use<ExcelService>();
-            });
+            Container.Register(() => mock.Object);
+            Container.Register<IAccountRepository, AccountRepository>();
+            Container.Register<IClientRepository, ClientRepository>();
+            Container.Register<IDetailRepository, DetailRepository>();
+            Container.Register<IItemRepository, ItemRepository>();
+            Container.Register<IOrderRepository, OrderRepository>();
+            Container.Register<IVendorRepository, VendorRepository>();
+            Container.Register<IAttachmentService, AttachmentService>();
+            Container.Register<IEmailService, EmailService>();
+            Container.Register<IPdfService, PdfService>();
+            Container.Register<IExcelService, ExcelService>();
         }
 
         private static Mock<IContext> CreateContext(string url, int currentUserClientId)
@@ -61,9 +61,12 @@ namespace IOF.Tests
 
             IPrincipal user = null;
 
+            IProvider provider = Container.GetInstance<IProvider>();
+            ISession session = provider.DataAccess.Session;
+
             if (currentUserClientId > 0)
             {
-                var client = DA.Current.Single<Client>(currentUserClientId);
+                var client = session.Single<Client>(currentUserClientId);
                 if (client != null)
                 {
                     var ident = new GenericIdentity(client.UserName);
@@ -76,7 +79,7 @@ namespace IOF.Tests
             mock.Setup(x => x.CurrentUser).Returns(() =>
             {
                 var username = mock.Object.User.Identity.Name;
-                var c = ClientInfo.Find(username);
+                var c = session.Query<ClientInfo>().First(x => x.UserName == username);
 
                 return new Models.Client()
                 {

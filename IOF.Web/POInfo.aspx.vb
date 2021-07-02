@@ -215,7 +215,7 @@ Public Class POInfo
         End If
     End Sub
 
-    Protected Sub btnSavePOInfo_Click(ByVal sender As Object, ByVal e As EventArgs)
+    Protected Sub BtnSavePOInfo_Click(ByVal sender As Object, ByVal e As EventArgs)
         Try
             Alert1.Hide()
 
@@ -239,7 +239,7 @@ Public Class POInfo
             End If
 
             Dim dateNeeded As DateTime
-            If Not DateTime.TryParse(txtNeededDate.Text, dateNeeded) Then
+            If Not Date.TryParse(txtNeededDate.Text, dateNeeded) Then
                 Alert1.Show("Invalid Date Needed value.")
                 Exit Sub
             End If

@@ -1,7 +1,7 @@
 ﻿using LNF.Repository;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Tests
 {
@@ -49,8 +49,8 @@ namespace IOF.Tests
             Assert.IsFalse(ClientRepository.IsPurchaser(p.ClientID));
 
             //clean up
-            var entity = DA.Current.Single<Ordering.Purchaser>(p.PurchaserID);
-            DA.Current.Delete(entity);
+            var entity = DataSession.Single<Ordering.Purchaser>(p.PurchaserID);
+            DataSession.Delete(entity);
         }
     }
 }

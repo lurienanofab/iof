@@ -1,44 +1,41 @@
 ﻿Imports IOF.Models
-Imports StructureMap.Attributes
+Imports LNF
+Imports LNF.DataAccess
 
 Public Class IOFPage
     Inherits Page
 
-    <SetterProperty>
-    Public Property IOFContext As IContext
+    <Inject> Public Property Provider As IProvider
 
-    <SetterProperty>
-    Public Property EmailService As IEmailService
+    <Inject> Public Property IOFContext As IContext
 
-    <SetterProperty>
-    Public Property PdfService As IPdfService
+    <Inject> Public Property EmailService As IEmailService
 
-    <SetterProperty>
-    Public Property OrderRepository As IOrderRepository
+    <Inject> Public Property PdfService As IPdfService
 
-    <SetterProperty>
-    Public Property DetailRepository As IDetailRepository
+    <Inject> Public Property OrderRepository As IOrderRepository
 
-    <SetterProperty>
-    Public Property VendorRepository As IVendorRepository
+    <Inject> Public Property DetailRepository As IDetailRepository
 
-    <SetterProperty>
-    Public Property ClientRepository As IClientRepository
+    <Inject> Public Property VendorRepository As IVendorRepository
 
-    <SetterProperty>
-    Public Property AccountRepository As IAccountRepository
+    <Inject> Public Property ClientRepository As IClientRepository
 
-    <SetterProperty>
-    Public Property ItemRepository As IItemRepository
+    <Inject> Public Property AccountRepository As IAccountRepository
 
-    <SetterProperty>
-    Public Property SearchService As ISearchService
+    <Inject> Public Property ItemRepository As IItemRepository
+
+    <Inject> Public Property SearchService As ISearchService
+
+    <Inject> Public Property AttachmentService As IAttachmentService
 
     Private _CurrentUserAccounts As IList(Of Account)
 
-    Sub New()
-        IOC.Container.BuildUp(Me)
-    End Sub
+    Public ReadOnly Property DataSession As ISession
+        Get
+            Return Provider.DataAccess.Session
+        End Get
+    End Property
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         If Page.IsPostBack Then

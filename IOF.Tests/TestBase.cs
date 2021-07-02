@@ -1,7 +1,6 @@
 ﻿using LNF;
-using LNF.Repository;
+using LNF.DataAccess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StructureMap.Attributes;
 
 namespace IOF.Tests
 {
@@ -9,26 +8,24 @@ namespace IOF.Tests
     {
         private IUnitOfWork _uow;
 
-        [SetterProperty]
-        public IContext Context { get; set; }
+        [Inject] public IProvider Provider { get; set; }
 
-        [SetterProperty]
-        public IPdfService PdfService { get; set; }
+        [Inject] public IContext Context { get; set; }
 
-        [SetterProperty]
-        public IEmailService EmailService { get; set; }
+        [Inject] public IPdfService PdfService { get; set; }
 
-        [SetterProperty]
-        public IItemRepository ItemRepository { get; set; }
+        [Inject] public IEmailService EmailService { get; set; }
 
-        [SetterProperty]
-        public IClientRepository ClientRepository { get; set; }
+        [Inject] public IItemRepository ItemRepository { get; set; }
+
+        [Inject] public IClientRepository ClientRepository { get; set; }
+
+        public ISession DataSession => Provider.DataAccess.Session;
 
         [TestInitialize]
         public void TestSetup()
         {
             _uow = ServiceProvider.Current.DataAccess.StartUnitOfWork();
-            IOC.Container.BuildUp(this);
         }
 
         [TestCleanup]

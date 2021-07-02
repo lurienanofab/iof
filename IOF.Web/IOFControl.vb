@@ -1,25 +1,41 @@
-﻿Imports StructureMap.Attributes
-
-Public Class IOFControl
+﻿Public Class IOFControl
     Inherits UserControl
 
-    <SetterProperty>
-    Public Property IOFContext As IContext
+    Public ReadOnly Property IOFContext As IContext
+        Get
+            Return Page.IOFContext
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property ClientRepository As IClientRepository
+    Public ReadOnly Property ClientRepository As IClientRepository
+        Get
+            Return Page.ClientRepository
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property AccountRepository As IAccountRepository
+    Public ReadOnly Property AccountRepository As IAccountRepository
+        Get
+            Return Page.AccountRepository
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property OrderRepository As IOrderRepository
+    Public ReadOnly Property OrderRepository As IOrderRepository
+        Get
+            Return Page.OrderRepository
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property DetailRepository As IDetailRepository
+    Public ReadOnly Property DetailRepository As IDetailRepository
+        Get
+            Return Page.DetailRepository
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property VendorRepository As IVendorRepository
+    Public ReadOnly Property VendorRepository As IVendorRepository
+        Get
+            Return Page.VendorRepository
+        End Get
+    End Property
 
     Public Overloads Property Page As IOFPage
         Get
@@ -31,7 +47,7 @@ Public Class IOFControl
     End Property
 
     Sub New()
-        IOC.Container.BuildUp(Me)
+        'IOC.Container.BuildUp(Me)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)

@@ -1,33 +1,45 @@
 ﻿Imports IOF.Models
-Imports StructureMap.Attributes
 
 ''' <summary>
 ''' A wrapper class for use by ObjectDataSource tags in aspx markup.
 ''' Be sure to set DataTextField and DataValueField properties on all DropDownLists.
 ''' </summary>
 Public Class Repository
+    Public ReadOnly Property Context As IContext
+        Get
+            Return [Global].Container.GetInstance(Of IContext)()
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property Context As IContext
+    Public ReadOnly Property Clients As IClientRepository
+        Get
+            Return [Global].Container.GetInstance(Of IClientRepository)()
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property Clients As IClientRepository
+    Public ReadOnly Property Orders As IOrderRepository
+        Get
+            Return [Global].Container.GetInstance(Of IOrderRepository)()
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property Orders As IOrderRepository
+    Public ReadOnly Property Accounts As IAccountRepository
+        Get
+            Return [Global].Container.GetInstance(Of IAccountRepository)()
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property Accounts As IAccountRepository
+    Public ReadOnly Property Vendors As IVendorRepository
+        Get
+            Return [Global].Container.GetInstance(Of IVendorRepository)()
+        End Get
+    End Property
 
-    <SetterProperty>
-    Public Property Vendors As IVendorRepository
-
-    <SetterProperty>
-    Public Property Items As IItemRepository
-
-    Public Sub New()
-        IOC.Container.BuildUp(Me)
-    End Sub
+    Public ReadOnly Property Items As IItemRepository
+        Get
+            Return [Global].Container.GetInstance(Of IItemRepository)()
+        End Get
+    End Property
 
     ''' <summary>
     ''' Get a list of all shipping methods. Used in ObjectDataSources (for example in POInfo.aspx).

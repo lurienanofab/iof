@@ -86,22 +86,13 @@ Partial Public Class POItems
     Protected WithEvents ddlCat1 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''phChildCategory control.
+    '''hidCat2ID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents phChildCategory As Global.System.Web.UI.WebControls.PlaceHolder
-    
-    '''<summary>
-    '''ddlCat2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ddlCat2 As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents hidCat2ID As Global.System.Web.UI.HtmlControls.HtmlInputHidden
     
     '''<summary>
     '''txtQuantity control.

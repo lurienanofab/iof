@@ -8,28 +8,41 @@ Namespace Ajax
             context.Response.ContentType = "application/json"
 
             Try
-                If context.Request.Form("command") = "add" Then
+                Dim result As Object = Nothing
+                Dim command = context.Request.Form("command")
+
+                If command = "add" Then
                     ' add the category
                     Dim parentId As Integer = Integer.Parse(context.Request.Form("parentId"))
                     Dim categoryName As String = context.Request.Form("categoryName")
                     Dim categoryNumber As String = context.Request.Form("categoryNumber")
                     AddCategory(parentId, categoryName, categoryNumber)
-                ElseIf context.Request.Form("command") = "modify" Then
+                    result = GetCategories()
+                ElseIf command = "modify" Then
                     ' modify the category
                     Dim categoryId As Integer = Integer.Parse(context.Request.Form("categoryId"))
                     Dim categoryName As String = context.Request.Form("categoryName")
                     Dim categoryNumber As String = context.Request.Form("categoryNumber")
                     ModifyCategory(categoryId, categoryName, categoryNumber)
-                ElseIf context.Request.Form("command") = "delete" Then
+                    result = GetCategories()
+                ElseIf command = "delete" Then
                     Dim categoryId As Integer = Integer.Parse(context.Request.Form("categoryId"))
                     DetailRepository.DeleteCategory(categoryId)
+                    result = GetCategories()
+                ElseIf command = "get-children" Then
+                    Dim categoryId As Integer = Integer.Parse(context.Request.Form("categoryId"))
+                    result = GetChildCategories(categoryId)
+                Else
+                    ' Default command (used in Categories.aspx)
+                    result = GetCategories()
                 End If
 
                 Dim settings As New JsonSerializerSettings With {.NullValueHandling = NullValueHandling.Ignore}
-                context.Response.Write(JsonConvert.SerializeObject(GetCategories(), Formatting.None, settings))
+                context.Response.Write(JsonConvert.SerializeObject(result, Formatting.None, settings))
             Catch ex As Exception
+                Dim errmsg = ex.Message
                 context.Response.StatusCode = 500
-                context.Response.Write(JsonConvert.SerializeObject(New With {.message = ex.Message}))
+                context.Response.Write(JsonConvert.SerializeObject(New With {.message = errmsg}))
             End Try
 
         End Sub
@@ -55,12 +68,18 @@ Namespace Ajax
             Return list
         End Function
 
+        Private Function GetChildCategories(categoryId As Integer) As IEnumerable(Of Models.Category)
+            Dim result As List(Of Models.Category) = DetailRepository.GetChildCategories(categoryId).OrderBy(Function(x) x.CategoryNumberToDouble()).ToList()
+            Return result
+        End Function
+
         Private Function CreateTreeNode(c As Models.Category) As TreeNode
-            Dim node As New TreeNode($"[{c.CategoryNumber}] {c.CategoryName}")
-            node.CategoryID = c.CategoryID
-            node.CategoryName = c.CategoryName
-            node.CategoryNumber = c.CategoryNumber
-            node.IsParent = c.ParentID = 0
+            Dim node As New TreeNode($"[{c.CategoryNumber}] {c.CategoryName}") With {
+                .CategoryID = c.CategoryID,
+                .CategoryName = c.CategoryName,
+                .CategoryNumber = c.CategoryNumber,
+                .IsParent = c.ParentID = 0
+            }
             Return node
         End Function
 

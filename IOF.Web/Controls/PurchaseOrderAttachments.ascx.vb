@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 Imports IOF.Models
-Imports StructureMap.Attributes
+Imports LNF
 
 Public Class PurchaseOrderAttachments
     Inherits IOFControl
@@ -8,8 +8,11 @@ Public Class PurchaseOrderAttachments
     Public Event Upload As EventHandler(Of AttachmentEventArgs)
     Public Event Delete As EventHandler(Of AttachmentEventArgs)
 
-    <SetterProperty>
-    Public Property AttachmentService As IAttachmentService
+    Public ReadOnly Property AttachmentService As IAttachmentService
+        Get
+            Return Page.AttachmentService
+        End Get
+    End Property
 
     Public Property POID As Integer
         Get

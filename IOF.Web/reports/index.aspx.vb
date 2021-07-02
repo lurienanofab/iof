@@ -1,15 +1,13 @@
 ﻿Imports IOF.Models
-Imports StructureMap.Attributes
+Imports LNF
 
 Namespace Reports
     Public Class Index
         Inherits IOFPage
 
-        <SetterProperty>
-        Public Property ExcelService As IExcelService
+        <Inject> Public Property ExcelService As IExcelService
 
-        <SetterProperty>
-        Public Property ReportService As IReportService
+        <Inject> Public Property ReportService As IReportService
 
         Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
 
@@ -33,9 +31,11 @@ Namespace Reports
                 Dim selectedClientId As String
 
                 If IsStoreManager() Then
-                    Dim listItem As New ListItem()
-                    listItem.Text = "Store Manager"
-                    listItem.Value = "0"
+                    Dim listItem As New ListItem With {
+                        .Text = "Store Manager",
+                        .Value = "0"
+                    }
+
                     ddlClients.Items.Insert(0, listItem)
                     selectedClientId = "0"
                 Else

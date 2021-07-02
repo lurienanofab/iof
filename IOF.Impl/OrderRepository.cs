@@ -1,12 +1,13 @@
 ﻿using IOF.Models;
+using LNF;
+using LNF.Impl;
 using LNF.Ordering;
 using LNF.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data = LNF.Repository.Data;
-using Ordering = LNF.Repository.Ordering;
-using LNF.Models.Ordering;
+using Data = LNF.Impl.Repository.Data;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
@@ -14,7 +15,7 @@ namespace IOF.Impl
     {
         public IContext Context { get; }
 
-        public OrderRepository(IContext context)
+        public OrderRepository(IProvider provider, IContext context) : base(provider)
         {
             Context = context;
         }
@@ -27,19 +28,19 @@ namespace IOF.Impl
 
         public IEnumerable<Order> GetDrafts(int clientId)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrder>().Where(x => x.Client.ClientID == clientId && x.Status.StatusID == Status.Draft);
+            var query = DataSession.Query<Ordering.PurchaseOrder>().Where(x => x.Client.ClientID == clientId && x.Status.StatusID == Status.Draft);
             return CreateOrders(query);
         }
 
         public IEnumerable<Order> GetAwaitingApproval()
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrder>().Where(x => x.Status.StatusID == Status.AwaitingApproval);
+            var query = DataSession.Query<Ordering.PurchaseOrder>().Where(x => x.Status.StatusID == Status.AwaitingApproval);
             return CreateOrders(query);
         }
 
         public OrderSummary GetOrderSummary(int clientId)
         {
-            var query = DA.Current.Query<Ordering.PurchaseOrder>().Where(x => x.Client.ClientID == clientId);
+            var query = DataSession.Query<Ordering.PurchaseOrder>().Where(x => x.Client.ClientID == clientId);
 
             var result = new OrderSummary()
             {
@@ -55,26 +56,34 @@ namespace IOF.Impl
         public void RequestApproval(int poid)
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
-            po.Status = Ordering.Status.AwaitingApproval;
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.SentForApproval, po, Context.CurrentUser.ClientID);
+            po.Status = GetStatus(OrderStatus.AwaitingApproval);
+
+            DataSession.SaveOrUpdate(po);
+
+            Tracking.Track(TrackingCheckpoints.SentForApproval, po.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID);
         }
 
         public void Approve(int poid, int approverId)
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
 
-            po.Status = Ordering.Status.Approved;
+            po.Status = GetStatus(OrderStatus.Approved);
             po.RealApproverID = approverId;
             po.ApprovalDate = DateTime.Now;
 
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.Approved, po, approverId);
+            DataSession.SaveOrUpdate(po);
+
+            Tracking.Track(TrackingCheckpoints.Approved, po.CreateModel<IPurchaseOrder>(), approverId);
         }
 
         public void Reject(int poid, int approverId)
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
-            po.Status = Ordering.Status.Draft;
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.Rejected, po, approverId);
+            po.Status = GetStatus(OrderStatus.Draft);
+
+            DataSession.SaveOrUpdate(po);
+
+            Tracking.Track(TrackingCheckpoints.Rejected, po.CreateModel<IPurchaseOrder>(), approverId);
         }
 
         public Order Copy(int poid, int? accountId = null)
@@ -101,19 +110,19 @@ namespace IOF.Impl
                 ShippingMethod = po.ShippingMethod,
                 Notes = po.Notes,
                 Attention = po.Attention,
-                Status = Ordering.Status.Draft
+                Status = GetStatus(OrderStatus.Draft)
             };
 
-            DA.Current.Insert(copy);
+            DataSession.Insert(copy);
 
             // po may be for a different user than current, this will get the correct details - making item copies if necessary
             var details = GetDetailsForCopy(po, copy, vendor);
 
-            DA.Current.Insert(details);
+            DataSession.Insert(details);
 
             copy.Details = details;
 
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.DraftCreated, copy, Context.CurrentUser.ClientID);
+            Tracking.Track(TrackingCheckpoints.DraftCreated, copy.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID);
 
             return CreateOrder(copy);
         }
@@ -121,19 +130,19 @@ namespace IOF.Impl
         public void ManuallyProcess(int poid)
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
-            po.Status = Ordering.Status.ProcessedManually;
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.ManuallyProcessed, po, Context.CurrentUser.ClientID);
+            po.Status = GetStatus(OrderStatus.ProcessedManually);
+            Tracking.Track(TrackingCheckpoints.ManuallyProcessed, po.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID);
         }
 
         public bool IsInventoryControlled(int poid)
         {
-            var result = DA.Current.Query<Ordering.PurchaseOrderDetail>().Any(x => x.PurchaseOrder.POID == poid && x.Item.InventoryItemID.HasValue);
+            var result = DataSession.Query<Ordering.PurchaseOrderDetail>().Any(x => x.PurchaseOrder.POID == poid && x.Item.InventoryItemID.HasValue);
             return result;
         }
 
         public bool IsClaimed(int poid, out int purchaserId, out string purchaserName, out string reqNum, out string realPO, out string purchNotes)
         {
-            var po = DA.Current.Single<Ordering.PurchaseOrder>(poid);
+            var po = DataSession.Single<Ordering.PurchaseOrder>(poid);
 
             var result = false;
 
@@ -148,7 +157,8 @@ namespace IOF.Impl
             if (po.PurchaserID.HasValue)
             {
                 purchaserId = po.PurchaserID.Value;
-                purchaserName = po.GetPurchaser().DisplayName;
+                var purchaser = DataSession.Single<Data.Client>(purchaserId);
+                purchaserName = purchaser.DisplayName;
                 realPO = po.RealPO;
                 result = true;
             }
@@ -161,9 +171,9 @@ namespace IOF.Impl
 
         public void Claim(int poid, int clientId)
         {
-            var po = DA.Current.Single<Ordering.PurchaseOrder>(poid);
-            var ps = DA.Current.Query<Ordering.PurchaserSearch>().FirstOrDefault(x => x.POID == poid);
-            var purchaser = DA.Current.Single<Data.Client>(clientId);
+            var po = DataSession.Single<Ordering.PurchaseOrder>(poid);
+            var ps = DataSession.Query<Ordering.PurchaserSearch>().FirstOrDefault(x => x.POID == poid);
+            var purchaser = DataSession.Single<Data.Client>(clientId);
 
             if (po != null && ps != null && purchaser != null)
             {
@@ -172,7 +182,7 @@ namespace IOF.Impl
                 // the view must also be updated or PurchaserSearch results won't change
                 ps.PurchaserID = purchaser.ClientID;
 
-                TrackingUtility.Track(Ordering.TrackingCheckpoints.Claimed, po, clientId);
+                Tracking.Track(TrackingCheckpoints.Claimed, po.CreateModel<IPurchaseOrder>(), clientId);
             }
         }
 
@@ -184,22 +194,22 @@ namespace IOF.Impl
             bool currentIsOrdered;
 
             currentRealPO = po.RealPO;
-            currentIsOrdered = po.Status == Ordering.Status.Ordered;
+            currentIsOrdered = po.Status.StatusID == (int)OrderStatus.Ordered;
 
-            Ordering.TrackingCheckpoints checkpoint = 0;
+            TrackingCheckpoints checkpoint = 0;
             bool track = false;
 
             if (currentIsOrdered)
             {
-                checkpoint = Ordering.TrackingCheckpoints.Modified;
+                checkpoint = TrackingCheckpoints.Modified;
                 track = currentIsOrdered && currentRealPO != realPO;
             }
             else
             {
                 if (!string.IsNullOrEmpty(realPO))
                 {
-                    po.Status = Ordering.Status.Ordered;
-                    checkpoint = Ordering.TrackingCheckpoints.Ordered;
+                    po.Status = GetStatus(OrderStatus.Ordered);
+                    checkpoint = TrackingCheckpoints.Ordered;
                     track = true;
                 }
             }
@@ -227,15 +237,15 @@ namespace IOF.Impl
             {
                 // only track if order status set (TrackingCheckpoints.Ordered) or the PO has
                 // already been ordered and the RealPO is changing (TrackingCheckpoints.Modified)
-                TrackingUtility.Track(checkpoint, po, Context.CurrentUser.ClientID, new { po.ReqNum, po.RealPO, po.PurchaserNotes });
+                Tracking.Track(checkpoint, po.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID, new { po.ReqNum, po.RealPO, po.PurchaserNotes });
             }
         }
 
         public void Cancel(int poid)
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
-            po.Status = Ordering.Status.Cancelled;
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.Cancelled, po, Context.CurrentUser.ClientID);
+            po.Status = GetStatus(OrderStatus.Cancelled);
+            Tracking.Track(TrackingCheckpoints.Cancelled, po.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID);
         }
 
         public Order Add(int clientId, int vendorId, int? accountId, int approverId, DateTime neededDate, bool oversized, int shippingMethodId, string notes, bool attention)
@@ -259,13 +269,13 @@ namespace IOF.Impl
                 ShippingMethod = Require<Ordering.ShippingMethod>(x => x.ShippingMethodID, shippingMethodId),
                 Notes = notes,
                 Attention = attention,
-                Status = Ordering.Status.Draft,
+                Status = GetStatus(OrderStatus.Draft),
                 Details = new List<Ordering.PurchaseOrderDetail>()
             };
 
-            DA.Current.Insert(po);
+            DataSession.Insert(po);
 
-            TrackingUtility.Track(Ordering.TrackingCheckpoints.DraftCreated, po, clientId, new { VendorID = vendorId, AccountID = accountId, ApproverID = approverId });
+            Tracking.Track(TrackingCheckpoints.DraftCreated, po.CreateModel<IPurchaseOrder>(), clientId, new { VendorID = vendorId, AccountID = accountId, ApproverID = approverId });
 
             return CreateOrder(po);
         }
@@ -291,11 +301,11 @@ namespace IOF.Impl
         {
             var po = Require<Ordering.PurchaseOrder>(x => x.POID, poid);
 
-            if (po.Status == Ordering.Status.Draft)
+            if (po.Status.StatusID == (int)OrderStatus.Draft)
             {
-                TrackingUtility.Track(Ordering.TrackingCheckpoints.Deleted, po, Context.CurrentUser.ClientID);
-                DA.Current.Delete(po.Details);
-                DA.Current.Delete(po);
+                Tracking.Track(TrackingCheckpoints.Deleted, po.CreateModel<IPurchaseOrder>(), Context.CurrentUser.ClientID);
+                DataSession.Delete(po.Details);
+                DataSession.Delete(po);
                 return true;
             }
 
@@ -304,7 +314,7 @@ namespace IOF.Impl
 
         public IEnumerable<ShippingMethod> GetAllShippingMethods()
         {
-            return DA.Current.Query<Ordering.ShippingMethod>().Select(x => new ShippingMethod()
+            return DataSession.Query<Ordering.ShippingMethod>().Select(x => new ShippingMethod()
             {
                 ShippingMethodID = x.ShippingMethodID,
                 ShippingMethodName = x.ShippingMethodName
@@ -464,8 +474,8 @@ namespace IOF.Impl
                 // current user is copying another user's order
 
                 // check for a vendor for the current user that has the same name as the po vendor
-                vendor = DA.Current.Query<Ordering.Vendor>().Where(x => x.ClientID == currentClientId).ToList().FirstOrDefault(x =>
-                    Ordering.PurchaseOrderItem.CleanString(x.VendorName) == Ordering.PurchaseOrderItem.CleanString(po.Vendor.VendorName));
+                vendor = DataSession.Query<Ordering.Vendor>().Where(x => x.ClientID == currentClientId).ToList().FirstOrDefault(x =>
+                    PurchaseOrderItems.CleanString(x.VendorName) == PurchaseOrderItems.CleanString(po.Vendor.VendorName));
 
                 if (vendor == null)
                 {
@@ -486,7 +496,7 @@ namespace IOF.Impl
                         VendorName = po.Vendor.VendorName
                     };
 
-                    DA.Current.Insert(vendor);
+                    DataSession.Insert(vendor);
                 }
                 else
                 {
@@ -528,8 +538,8 @@ namespace IOF.Impl
                 foreach (var d in po.Details)
                 {
                     var i = vendor.Items.FirstOrDefault(x =>
-                        Ordering.PurchaseOrderItem.CleanString(x.Description) == Ordering.PurchaseOrderItem.CleanString(d.Item.Description)
-                        && Ordering.PurchaseOrderItem.CleanString(x.PartNum) == Ordering.PurchaseOrderItem.CleanString(d.Item.PartNum));
+                        PurchaseOrderItems.CleanString(x.Description) == PurchaseOrderItems.CleanString(d.Item.Description)
+                        && PurchaseOrderItems.CleanString(x.PartNum) == PurchaseOrderItems.CleanString(d.Item.PartNum));
 
                     if (i == null)
                     {
@@ -545,7 +555,7 @@ namespace IOF.Impl
                             Vendor = vendor
                         };
 
-                        DA.Current.Insert(i);
+                        DataSession.Insert(i);
 
                         vendor.Items.Add(i);
                     }
@@ -582,12 +592,12 @@ namespace IOF.Impl
             if (po.Client.ClientID != currentClientId)
             {
                 // check if the current user has the same approver
-                var app = DA.Current.Query<Ordering.Approver>().FirstOrDefault(x => x.ApproverID == po.Approver.ClientID && x.ClientID == currentClientId);
+                var app = DataSession.Query<Ordering.Approver>().FirstOrDefault(x => x.ApproverID == po.Approver.ClientID && x.ClientID == currentClientId);
 
                 if (app == null)
                 {
                     // use the current user's primary approver
-                    var defapp = DA.Current.Query<Ordering.Approver>().FirstOrDefault(x => x.Active && x.ClientID == currentClientId && x.IsPrimary);
+                    var defapp = DataSession.Query<Ordering.Approver>().FirstOrDefault(x => x.Active && x.ClientID == currentClientId && x.IsPrimary);
 
                     if (defapp == null)
                     {
@@ -600,7 +610,7 @@ namespace IOF.Impl
                             IsPrimary = true //because the current user has no active primary at the moment
                         };
 
-                        DA.Current.Insert(app);
+                        DataSession.Insert(app);
 
                         approver = po.Approver;
                     }
@@ -621,6 +631,11 @@ namespace IOF.Impl
             }
 
             return approver;
+        }
+
+        private Ordering.Status GetStatus(OrderStatus s)
+        {
+            return Require<Ordering.Status>(x => x.StatusID, (int)s);
         }
     }
 }

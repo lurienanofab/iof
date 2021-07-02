@@ -1,15 +1,13 @@
-﻿Imports StructureMap.Attributes
+﻿Imports LNF
 
 Public Class IOFMaster
     Inherits MasterPage
 
-    <SetterProperty>
-    Public Property PdfService As IPdfService
+    <Inject> Public Property PdfService As IPdfService
 
     Public Property CurrentRoute As Route
 
     Public Sub New()
-        IOC.Container.BuildUp(Me)
     End Sub
 
     Public Overloads Property Page As IOFPage
@@ -37,7 +35,23 @@ Public Class IOFMaster
             Accordion1.DataSource = GetAccordionGroups()
             Accordion1.DataBind()
         End If
+
+        phGoogleAnalytics.Visible = UseGoogleAnalytics()
     End Sub
+
+    Private Function UseGoogleAnalytics() As Boolean
+        If ConfigurationManager.AppSettings("IsProduction") = "true" Then
+            If ConfigurationManager.AppSettings("UseGoogleAnalytics") = "true" Then
+                Return True
+            End If
+        End If
+
+        Return False
+    End Function
+
+    Protected Function GoogleAnalyticsTrackingID() As String
+        Return ConfigurationManager.AppSettings("GoogleAnalyticsTrackingID")
+    End Function
 
     Private Function GetAccordionGroups() As IList(Of AccordionGroup)
         Dim currentRoute As Route = Route.GetCurrentRoute(Request)

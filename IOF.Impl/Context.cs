@@ -1,5 +1,6 @@
 ﻿using IOF.Models;
-using LNF.Models.Data;
+using LNF;
+using LNF.Data;
 using LNF.Web;
 using System;
 using System.Security.Principal;
@@ -10,9 +11,11 @@ namespace IOF.Impl
 {
     public class Context : IContext
     {
+        public IProvider Provider => ServiceProvider.Current;
+
         public HttpContextBase ContextBase => new HttpContextWrapper(HttpContext.Current);
 
-        public Client CurrentUser => CreateClient(ContextBase.CurrentUser());
+        public Client CurrentUser => CreateClient(ContextBase.CurrentUser(Provider));
 
         public Uri Url => ContextBase.Request.Url;
 
@@ -24,8 +27,8 @@ namespace IOF.Impl
 
         public void SignIn(Client client)
         {
-            var repo = new ClientRepository();
-            var c = repo.Require<LNF.Repository.Data.ClientInfo>(x => x.ClientID, client.ClientID);
+            var repo = new ClientRepository(Provider);
+            var c = repo.Require<LNF.Impl.Repository.Data.ClientInfo>(x => x.ClientID, client.ClientID);
             var roles = c.Roles();
 
             var authCookie = FormsAuthentication.GetAuthCookie(c.UserName, true);

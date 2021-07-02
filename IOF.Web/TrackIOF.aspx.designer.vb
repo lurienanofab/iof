@@ -41,22 +41,13 @@ Partial Public Class TrackIOF
     Protected WithEvents phDetail As Global.System.Web.UI.WebControls.PlaceHolder
     
     '''<summary>
-    '''lblPOID control.
+    '''Tracking1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblPOID As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
-    '''rptTracking control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents rptTracking As Global.System.Web.UI.WebControls.Repeater
+    Protected WithEvents Tracking1 As Global.IOF.Web.Controls.Tracking
     
     '''<summary>
     '''btnView control.

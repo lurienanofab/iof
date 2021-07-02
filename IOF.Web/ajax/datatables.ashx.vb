@@ -1,15 +1,14 @@
 ﻿Imports IOF.Models
+Imports LNF
 Imports LNF.Web
 Imports Newtonsoft.Json
-Imports StructureMap.Attributes
 
 Namespace Ajax
     Public Class Datatables
         Inherits IOFHandler
         Implements IReadOnlySessionState
 
-        <SetterProperty>
-        Public Property SearchService As ISearchService
+        <Inject> Public Property SearchService As ISearchService
 
         Public Overrides Sub ProcessRequest(context As HttpContext)
             context.Response.ContentType = "application/json"

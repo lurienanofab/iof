@@ -59,6 +59,51 @@ Partial Public Class ApprovalProcess
     Protected WithEvents btnSendEmail As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
+    '''phApproveOrReject control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents phApproveOrReject As Global.System.Web.UI.WebControls.PlaceHolder
+    
+    '''<summary>
+    '''btnApprove control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnApprove As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''btnReject control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnReject As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''phTracking control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents phTracking As Global.System.Web.UI.WebControls.PlaceHolder
+    
+    '''<summary>
+    '''Tracking1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Tracking1 As Global.IOF.Web.Controls.Tracking
+    
+    '''<summary>
     '''hypHome control.
     '''</summary>
     '''<remarks>

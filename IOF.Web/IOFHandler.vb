@@ -1,34 +1,26 @@
-﻿Imports StructureMap.Attributes
+﻿Imports LNF
 
 Public MustInherit Class IOFHandler
     Implements IHttpHandler
 
-    <SetterProperty>
-    Public Property EmailService As IEmailService
+    <Inject> Public Property EmailService As IEmailService
 
-    <SetterProperty>
-    Public Property AttachmentService As IAttachmentService
+    <Inject> Property AttachmentService As IAttachmentService
 
-    <SetterProperty>
-    Public Property ClientRepository As IClientRepository
+    <Inject> Public Property ClientRepository As IClientRepository
 
-    <SetterProperty>
-    Public Property PurchaseOrderRepository As IOrderRepository
+    <Inject> Public Property PurchaseOrderRepository As IOrderRepository
 
-    <SetterProperty>
-    Public Property PurchaseOrderDetailRepository As IDetailRepository
+    <Inject> Public Property PurchaseOrderDetailRepository As IDetailRepository
 
-    <SetterProperty>
-    Public Property DetailRepository As IDetailRepository
+    <Inject> Public Property DetailRepository As IDetailRepository
 
-    <SetterProperty>
-    Public Property ItemRepository As IItemRepository
+    <Inject> Public Property ItemRepository As IItemRepository
 
-    <SetterProperty>
-    Public Property VendorRepository As IVendorRepository
+    <Inject> Public Property VendorRepository As IVendorRepository
 
     Public Sub New()
-        IOC.Container.BuildUp(Me)
+        'IOC.Container.BuildUp(Me)
     End Sub
 
     Public MustOverride Sub ProcessRequest(context As HttpContext) Implements IHttpHandler.ProcessRequest

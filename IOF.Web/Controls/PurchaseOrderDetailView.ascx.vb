@@ -1,6 +1,4 @@
 ﻿Imports IOF.Models
-Imports LNF.Web
-Imports StructureMap.Attributes
 
 Namespace Controls
     Public Class PurchaseOrderDetailView

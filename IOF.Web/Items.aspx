@@ -28,7 +28,7 @@
                             <div class="col-md-offset-1 col-md-11">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" runat="server" id="chkStoreManager" class="store-manager" />
+                                        <input type="checkbox" runat="server" id="chkStoreManager" class="store-manager" tabindex="9" />
                                         Store Manager
                                     </label>
                                 </div>
@@ -39,21 +39,21 @@
                     <div class="form-group form-group-sm">
                         <label class="col-md-1 control-label">Vendor</label>
                         <div class="col-md-4">
-                            <asp:DropDownList runat="server" ID="ddlVendors" DataTextField="VendorName" DataValueField="VendorID" AutoPostBack="true" CssClass="form-control" />
+                            <asp:DropDownList runat="server" ID="ddlVendors" DataTextField="VendorName" DataValueField="VendorID" AutoPostBack="true" CssClass="form-control" TabIndex="1" />
                         </div>
                     </div>
 
                     <div class="form-group form-group-sm">
                         <label class="col-md-1 control-label">Part #</label>
                         <div class="col-md-4">
-                            <asp:TextBox runat="server" ID="txtPartNum" MaxLength="50" CssClass="form-control" />
+                            <asp:TextBox runat="server" ID="txtPartNum" MaxLength="50" CssClass="form-control" TabIndex="2" />
                         </div>
                     </div>
 
                     <div class="form-group form-group-sm">
                         <label class="col-md-1 control-label">Description *</label>
                         <div class="col-md-4">
-                            <asp:TextBox runat="server" ID="txtDescription" MaxLength="500" CssClass="form-control" />
+                            <asp:TextBox runat="server" ID="txtDescription" MaxLength="500" CssClass="form-control" TabIndex="3" />
                         </div>
                     </div>
 
@@ -62,7 +62,7 @@
                         <div class="col-md-2">
                             <div class="input-group">
                                 <span class="input-group-addon">$</span>
-                                <asp:TextBox runat="server" ID="txtUnitPrice" MaxLength="50" CssClass="form-control" />
+                                <asp:TextBox runat="server" ID="txtUnitPrice" MaxLength="50" CssClass="form-control" TabIndex="4" />
                             </div>
                         </div>
                     </div>
@@ -71,16 +71,16 @@
                         <div class="form-group form-group-sm">
                             <label class="col-md-1 control-label">Store Item</label>
                             <div class="col-md-4">
-                                <asp:DropDownList runat="server" ID="ddlInventoryItem" DataTextField="Description" DataValueField="InventoryItemID" CssClass="form-control" />
+                                <asp:DropDownList runat="server" ID="ddlInventoryItem" DataTextField="Description" DataValueField="InventoryItemID" CssClass="form-control" TabIndex="5" />
                             </div>
                         </div>
                     </asp:PlaceHolder>
 
                     <div class="form-group form-group-sm">
                         <div class="col-md-offset-1 col-md-4">
-                            <asp:Button runat="server" ID="btnAddItem" Text="Add Item" CssClass="btn btn-default" />
-                            <asp:Button runat="server" ID="btnUpdateItem" Text="Modify Item" Visible="false" CssClass="btn btn-default" />
-                            <asp:Button runat="server" ID="btnClear" Text="Clear" OnClick="btnClear_Click" CssClass="btn btn-default" />
+                            <asp:Button runat="server" ID="btnAddItem" Text="Add Item" CssClass="btn btn-default" TabIndex="6" />
+                            <asp:Button runat="server" ID="btnUpdateItem" Text="Modify Item" Visible="false" CssClass="btn btn-default" TabIndex="7" />
+                            <asp:Button runat="server" ID="btnClear" Text="Clear" OnClick="btnClear_Click" CssClass="btn btn-default" TabIndex="8" />
                             <uc:BootstrapAlert runat="server" ID="Alert1" />
                         </div>
                     </div>

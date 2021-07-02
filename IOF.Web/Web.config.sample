@@ -36,6 +36,10 @@
     <add key="AttachmentsDirectory" value="xxxxx"/>
     <add key="AttachmentsVirtualPath" value="~/Attachments.ashx?POID={0}&amp;FileName={1}"/>
     <add key="TotalWarningMinimum" value="10000"/>
+    <add key="AutoAddStoreManagerVendor" value="true"/>
+    <add key="UseApproveOrReject" value="true"/>
+    <add key="UseGoogleAnalytics" value="true"/>
+    <add key="GoogleAnalyticsTrackingID" value="xxxxx"/>
     <add key="ScanningAssemblies" value="IOF.Impl"/>
     <add key="MongoConnectionString" value="xxxxx"/>
     <add key="ValidationSettings:UnobtrusiveValidationMode" value="None"/>

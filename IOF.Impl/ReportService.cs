@@ -1,10 +1,9 @@
-﻿using System;
-using IOF.Models;
+﻿using IOF.Models;
 using LNF.Repository;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Ordering = LNF.Repository.Ordering;
 
 namespace IOF.Impl
 {
@@ -12,7 +11,7 @@ namespace IOF.Impl
     {
         public IEnumerable<ItemReportItem> GetItemReport(int itemId)
         {
-            var dt = DA.Command()
+            var dt = DataCommand.Create()
                 .Param("Action", "ItemReport")
                 .Param("ItemID", itemId)
                 .FillDataTable("IOF.dbo.spReport_Select");
@@ -31,7 +30,7 @@ namespace IOF.Impl
 
         public IEnumerable<StoreManagerReportItem> GetStoreManagerReport()
         {
-            var dt = DA.Command().FillDataTable("IOF.dbo.Report_StoreManager");
+            var dt = DataCommand.Create().FillDataTable("IOF.dbo.Report_StoreManager");
 
             var result = dt.AsEnumerable().Select(x => new StoreManagerReportItem()
             {

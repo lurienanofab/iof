@@ -46,18 +46,18 @@ Public Class POItems
             Else
                 ddlCat1.SelectedIndex = 0
             End If
-            phChildCategory.Visible = False
+            'phChildCategory.Visible = False
         ElseIf args.CategoryID <> 0 AndAlso args.CategoryParentID <> 0 Then
             ddlCat1.SelectedValue = args.CategoryParentID.ToString()
-            LoadSubCategories()
-            If ddlCat2.Items.FindByValue(args.CategoryID.ToString()) IsNot Nothing Then
-                ddlCat2.SelectedValue = args.CategoryID.ToString()
-            Else
-                ddlCat2.SelectedIndex = -1
-            End If
+            'LoadSubCategories()
+            'If ddlCat2.Items.FindByValue(args.CategoryID.ToString()) IsNot Nothing Then
+            '    ddlCat2.SelectedValue = args.CategoryID.ToString()
+            'Else
+            '    ddlCat2.SelectedIndex = -1
+            'End If
         ElseIf args.CategoryID = 0 AndAlso args.CategoryParentID = 0 Then
             ddlCat1.SelectedIndex = 0
-            LoadSubCategories()
+            'LoadSubCategories()
         End If
 
         hidPartNum.Value = args.PartNum
@@ -147,15 +147,15 @@ Public Class POItems
         ddlCat1.DataSource = DetailRepository.GetParentCategories().OrderBy(Function(x) x.CategoryNumberToDouble())
         ddlCat1.DataBind()
         ddlCat1.SelectedIndex = 0
-        LoadSubCategories()
+        'LoadSubCategories()
     End Sub
 
-    Private Sub LoadSubCategories()
-        Dim parentId As Integer = Convert.ToInt32(ddlCat1.SelectedValue)
-        ddlCat2.DataSource = DetailRepository.GetChildCategories(parentId).OrderBy(Function(x) x.CategoryNumberToDouble())
-        ddlCat2.DataBind()
-        phChildCategory.Visible = ddlCat2.Items.Count > 0
-    End Sub
+    'Private Sub LoadSubCategories()
+    '    Dim parentId As Integer = Convert.ToInt32(ddlCat1.SelectedValue)
+    '    ddlCat2.DataSource = DetailRepository.GetChildCategories(parentId).OrderBy(Function(x) x.CategoryNumberToDouble())
+    '    ddlCat2.DataBind()
+    '    phChildCategory.Visible = ddlCat2.Items.Count > 0
+    'End Sub
 
     Private Sub LoadInventoryItems()
         If StoreManager Then
@@ -167,7 +167,7 @@ Public Class POItems
     End Sub
 
     Protected Sub DdlCat1_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ddlCat1.SelectedIndexChanged
-        LoadSubCategories()
+        'LoadSubCategories()
         LoadPurchaseOrderDetails()
     End Sub
 
@@ -284,7 +284,27 @@ Public Class POItems
     End Sub
 
     Protected Function GetSelectedCatID() As Integer
-        Return If(phChildCategory.Visible, Convert.ToInt32(ddlCat2.SelectedValue), Convert.ToInt32(ddlCat1.SelectedValue))
+        Dim val As String
+
+        If hidCat2ID.Value <> "0" Then
+            val = hidCat2ID.Value
+        Else
+            val = ddlCat1.SelectedValue
+        End If
+
+        If String.IsNullOrEmpty(val) Then
+            Throw New Exception("Selected CatID is an empty string.")
+        End If
+
+        Dim result As Integer
+
+        If Integer.TryParse(val, result) Then
+            Return result
+        Else
+            Throw New Exception($"Invalid CatID value: {val}")
+        End If
+
+        'Return If(phChildCategory.Visible, Convert.ToInt32(ddlCat2.SelectedValue), Convert.ToInt32(ddlCat1.SelectedValue))
     End Function
 
     Protected Function GetSelectedPODID() As Integer

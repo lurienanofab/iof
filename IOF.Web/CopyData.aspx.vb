@@ -78,7 +78,8 @@ Public Class CopyData
             phCopyToClientName.Visible = True
         End If
 
-        ddlCopyFromClient.DataSource = CreateClientListItems(ClientRepository.GetClientsWithVendor(Nothing))
+        ' Passing Nothing so that all clients are returned, see Ticket #453921.
+        ddlCopyFromClient.DataSource = CreateClientListItems(ClientRepository.GetClientsWithVendor(active:=Nothing))
         ddlCopyFromClient.DataBind()
 
         If IsStoreManager() Then

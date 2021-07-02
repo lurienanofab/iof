@@ -1,16 +1,24 @@
 ﻿using LNF;
-using LNF.Repository;
+using LNF.DataAccess;
 using System;
 using System.Linq.Expressions;
-using Ordering = LNF.Repository.Ordering;
+using Ordering = LNF.Impl.Repository.Ordering;
 
 namespace IOF.Impl
 {
     public abstract class RepositoryBase
     {
-        internal T Require<T>(Expression<Func<T, int>> exp, int id) where T : IDataItem
+        protected IProvider Provider { get; }
+        protected ISession DataSession => Provider.DataAccess.Session;
+
+        protected RepositoryBase(IProvider provider)
         {
-            var result = DA.Current.Single<T>(id);
+            Provider = provider;
+        }
+
+        internal T Require<T>(Expression<Func<T, int>> exp, int id) where T : LNF.DataAccess.IDataItem
+        {
+            var result = DataSession.Single<T>(id);
 
             if (result == null)
                 throw new ItemNotFoundException<T>(exp, id);
@@ -20,7 +28,7 @@ namespace IOF.Impl
 
         internal Ordering.Approver Require(Ordering.Approver id)
         {
-            var result = DA.Current.Single<Ordering.Approver>(id);
+            var result = DataSession.Single<Ordering.Approver>(id);
 
             if (result == null)
                 throw new ItemNotFoundException("Approver", $"ClientID = {id.ClientID} and ApproverID = {id.ApproverID}");
@@ -30,7 +38,7 @@ namespace IOF.Impl
 
         internal Ordering.PurchaseOrderAccount Require(Ordering.PurchaseOrderAccount id)
         {
-            var result = DA.Current.Single<Ordering.PurchaseOrderAccount>(id);
+            var result = DataSession.Single<Ordering.PurchaseOrderAccount>(id);
 
             if (result == null)
                 throw new ItemNotFoundException("PurchaseOrderAccount", $"ClientID = {id.ClientID} and AccountID = {id.AccountID}");
